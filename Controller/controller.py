@@ -29,11 +29,13 @@ def form_sample_from_entry(event, callback = None, text="", new_username="Anonym
 def process_keyboard_input(event, text, callback):
     # backspace
     if event.keycode in forbidden_keycodes:
+        keyboardcapture.stop_recording()
         callback(False)
+        return
     if text_for_comparison is not None:
         if text != text_for_comparison[:len(text)]:
-            callback(True)
             keyboardcapture.stop_recording()
+            callback(True)
             return
     keyboardcapture.record_keyboard_entries(event)
 
