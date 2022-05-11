@@ -34,11 +34,9 @@ def form_sample_from_entry(text, new_username, callback):
     current_sample = Sample(text, inputtime, current_username, values_for_sample)
     callback (2, current_sample.get_text_and_value_overview())       
 
-def get_all_sample_identifier():
-    if current_sample is not None:
-        return("Username41", current_sample.get_short_identifier())
-    else:
-        return("Username41",)
+def get_all_sample_identifier(callback):
+    all_identifier = fileaccess.read_sample_identifier_from_file()
+    callback (1, all_identifier)
 
 def archive_current_sample(set_text_for_comparison, callback):
     fileaccess.write_sample_to_file(current_sample)

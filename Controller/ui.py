@@ -43,8 +43,9 @@ class Page(Frame):
        Label (self, text = page_name, font=('Helvetica', 18, "bold")).pack()
        if view_change:
            Radiobutton(header, text="Recording Samples", indicatoron = 0, width = 20, variable=root.page_number_from_header, command=root.change_page,value=0).grid(row=0, column=1)
-           Radiobutton(header, text="Verification", indicatoron = 0, width = 20, variable=root.page_number_from_header, command=root.change_page,value=1).grid(row=0, column=2)
+           Radiobutton(header, text="Verification", indicatoron = 0, width = 20, variable=root.page_number_from_header, command=lambda: c.get_all_sample_identifier(root.change_page),value=1).grid(row=0, column=2)
 
+#TODO alle daten in input_data übergeben (username, vergleich content)
 class RecordingPage(Page):
     def __init__(self, root, input_data = None):
         super().__init__(root, "Recording Samples", True)
@@ -92,8 +93,9 @@ class RecordingPage(Page):
         
 
 class VerificationPage(Page):
-    def __init__(self, root, input_data = None):
+    def __init__(self, root, input_data_identifier):
         super().__init__(root, "Verification", True)
+        self.input_data_identifier = input_data_identifier
 
         #elements in view
         sample_selection = Frame(self)
@@ -118,12 +120,11 @@ class VerificationPage(Page):
             # test_list.remove(item)
 
     def fill_with_input_data(self):
-        input_data_samples = c.get_all_sample_identifier()
         output_data_learnsamples = []
         output_data_testsamples = []
 
         index = 0
-        for sample in input_data_samples:
+        for sample in self.input_data_identifier:
             # new_default_learn_var = StringVar(value="")
             # new_default_test_var = StringVar(value="")
             output_data_learnsamples.append(StringVar(value=""))
@@ -137,12 +138,12 @@ class VerificationPage(Page):
 
 
 class RecordingResultsPage(Page):
-    def __init__(self, root, input_data):
-        super().__init__(root, "Recording Results", input_data)
+    def __init__(self, root, input_data_content_and_values):
+        super().__init__(root, "Recording Results")
 
         # textfield for displaying entered text
         result_text_box = ScrolledText(self, height=12, width=80)
-        result_text_box.insert(INSERT, input_data)
+        result_text_box.insert(INSERT, input_data_content_and_values)
         result_text_box.configure(state ='disabled')
         result_text_box.pack()
 
@@ -161,7 +162,7 @@ class RecordingResultsPage(Page):
 
 class VerificationResultsPage(Page):
     def __init__(self, root, input_data):
-        super().__init__(root, "Verification Results", input_data)
+        super().__init__(root, "Verification Results")
 
 #if __name__ == "__main__":
 root = ApplicationUI()
