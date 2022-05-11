@@ -55,5 +55,4 @@ def delete_current_sample(set_text_for_comparison, callback):
 def verify(learnsample_identifier, testsample_identifier, encrypted, callback):
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifier)
     testsamples = fileaccess.read_samples_from_files(testsample_identifier)
-    print("learnsamples ", str(learnsamples))
-    print("testsamples ", str(testsamples))
+    callback(3)

@@ -112,10 +112,13 @@ class VerificationPage(Page):
 
         self.fill_with_input_data()
 
-        encryption_check = BooleanVar(value=False)
-        checkbox_encryption = Checkbutton(self, text="Verification process should be done with encrypted testsamples", variable=encryption_check, onvalue=True, offvalue=False)
+        self.encryption_check = BooleanVar(value=False)
+        checkbox_encryption = Checkbutton(self, text="Verification process should be done with encrypted testsamples", variable=self.encryption_check, onvalue=True, offvalue=False)
         checkbox_encryption.pack()
-        Button(self, text='Start verification process', command= lambda: c.verify(self.get_selected_learnidentifier(), self.get_selected_testidentifier(), True, root.change_page)).pack()
+        # unübersichtlich, entweder in EINE datei unten, die nach ermittlung der werte c.verify aufruft und selbst failure verarbeitet oder in mehrere zeilen
+        Button(self, text='Start verification process', command= lambda: self.starting_verification(root.change_page)).pack()
+        self.tooltip = Label (self, text = "Please select at least one item from each group.")
+        self.tooltip.pack()
             
     def fill_with_input_data(self):
         index = 0
@@ -128,7 +131,22 @@ class VerificationPage(Page):
             self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=self.testsamples_identifier[index], onvalue=sample, offvalue=""))
             # , variable=output_data_testsamples[index], onvalue=sample, offvalue=""
             index += 1
-            
+
+    def starting_verification(self, callback):
+        output_learnsamples = []
+        output_testsamples = []
+        for l in self.learnsamples_identifier:
+            if l.get() != "":
+                output_learnsamples.append(l.get())
+        for t in self.testsamples_identifier:
+             if t.get() != "":
+                output_testsamples.append(t.get())
+        if not output_learnsamples or not output_testsamples:
+            self.tooltip.config(bg="red")
+        else:
+            c.verify(output_learnsamples, output_testsamples, self.encryption_check.get(), callback)
+
+    """
     def get_selected_learnidentifier(self):
         output_data_learnsamples = []
         for l in self.learnsamples_identifier:
@@ -142,9 +160,11 @@ class VerificationPage(Page):
              if t.get() != "":
                 output_data_testsamples.append(t.get())
         return output_data_testsamples
-        
-       
 
+    def missing_selection(self):
+        self.tooltip.config(bg="red")
+
+    """     
 
 class RecordingResultsPage(Page):
     def __init__(self, root, input_data_content_and_values):
