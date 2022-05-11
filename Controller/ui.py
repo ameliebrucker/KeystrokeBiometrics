@@ -1,7 +1,9 @@
 from tkinter import *
-from tkinter import font
 from tkinter.scrolledtext import ScrolledText
 
+#from keystroke_biometrics.controller.controller import *
+# from Controller import controller as c
+#import Controller.controller as c
 import controller as c
 
 # styles
@@ -9,7 +11,7 @@ import controller as c
 
 class ApplicationUI (Tk):
     def __init__(self):
-        Tk.__init__(self)
+        super().__init__()
         self.title("Keystroke Biometrics")
         # self.geometry("500x400")
          # self.state('zoomed')
@@ -35,7 +37,7 @@ class ApplicationUI (Tk):
 
 class Page(Frame):
     def __init__(self, root, page_name, view_change=False):
-       Frame.__init__(self, root)
+       super().__init__(root)
        header = Frame(self)
        header.pack(pady=20, padx=20, side= TOP, anchor="w")
        Label (self, text = page_name, font=('Helvetica', 18, "bold")).pack()
@@ -45,35 +47,53 @@ class Page(Frame):
 
 class RecordingPage(Page):
     def __init__(self, root, input_data = None):
-        Page.__init__(self, root, "Recording Samples", True)
+        super().__init__(root, "Recording Samples", True)
 
         # username frame
         username_frame = Frame(self)
         username_frame.pack()
         Label(username_frame, text="Username: ").grid(row=0)
-        username = StringVar(value=c.current_username)
-        Entry(username_frame, text=username).grid(row=0, column=1)
+        self.username = StringVar(value=c.current_username)
+        self.username_entry = Entry(username_frame, text=self.username)
+        self.username_entry.bind("<Key>", self.limit_username_length)
+        self.username_entry.grid(row=0, column=1)
 
         #entry field for keystroke recognition
-        text_box = Text(self, height=12, width=80)
-        text_box.bind("<KeyPress>", c.form_sample_from_entry)
-        text_box.bind("<KeyRelease>", c.form_sample_from_entry)
+        self.input_text_box = Text(self, height=12, width=80)
+        #text_box.bind("<KeyPress>", c.validate_keyboard_entries)
+        self.input_text_box.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_text_box.get(1.0, "end-1c"), self.input_validation_failed))
+        self.input_text_box.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_text_box.get(1.0, "end-1c"), self.input_validation_failed))
+        #text_box.bind("<KeyRelease>",c.form_sample_from_entry)
         # zeichenkette bis zu return taste
-        text_box.bind("<Return>", lambda event: c.form_sample_from_entry(event, root.change_page, username.get(), text_box.get(1.0, "end-1c")))
+        self.input_text_box.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_text_box.get(1.0, "end-1c"), self.username.get(), root.change_page))
         # text_box = Entry(self)
-        text_box.pack()
+        self.input_text_box.pack()
+
+        #required text
+        if c.text_for_comparison is not None:
+            self.required_text_tip = Label (self, text="Required text input: \"" + c.text_for_comparison + "\"")
+            self.required_text_tip.pack()
 
         #tooltip
-        Label (self, text = "Please type your sample text as fluent as possible in the box above. Finish your entry by pressing the enter key.").pack()
+        self.tooltip = Label (self, text = "Please type your sample text as fluent as possible in the box above. Avoid deleting characters or changing the cursor position. Finish your entry by pressing the enter key.")
+        self.tooltip.pack()
+    
+    def limit_username_length(self, event):
+        #limit to 30 characters to avoid problems with long input
+        if len(self.username_entry.get()) > 29:
+            self.username_entry.delete(29, END)
 
-    def validate_text_input(self):
-        text_for_comparison = c.text_for_comparison
-
+    def input_validation_failed(self, comparison_failed):
+        self.input_text_box.delete("1.0","end")
+        if comparison_failed:
+            self.required_text_tip.config(bg= "red")
+        else:
+            self.tooltip.config(bg="red")
         
 
 class VerificationPage(Page):
     def __init__(self, root, input_data = None):
-        Page.__init__(self, root, "Verification", True)
+        super().__init__(root, "Verification", True)
 
         #elements in view
         sample_selection = Frame(self)
@@ -113,13 +133,12 @@ class VerificationPage(Page):
             self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=output_data_testsamples[index], onvalue=sample, offvalue=""))
             # , variable=output_data_testsamples[index], onvalue=sample, offvalue=""
             index += 1
-
        
 
 
 class RecordingResultsPage(Page):
     def __init__(self, root, input_data):
-        Page.__init__(self, root, "Recording Results", input_data)
+        super().__init__(root, "Recording Results", input_data)
 
         # textfield for displaying entered text
         result_text_box = ScrolledText(self, height=12, width=80)
@@ -128,21 +147,22 @@ class RecordingResultsPage(Page):
         result_text_box.pack()
 
         # checkbox keep entry as reference for next entrys
-        # TODO keep this value checked/unchecked even after page change
         reference_entry_check = BooleanVar(value=False)
+        if c.text_for_comparison is not None:
+            reference_entry_check.set(True)
         checkbox_reference_entry = Checkbutton(self, text="Keep this text as validation reference for next entry", variable=reference_entry_check, onvalue=True, offvalue=False)
-        # checkbox_reference_entry.select()
         checkbox_reference_entry.pack()
 
         # button group
         button_group = Frame(self)
         button_group.pack()
-        Button(button_group, text='Delete this record').grid(row=0, column=0)
+        Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=0)
         Button(button_group, text='Save this record').grid(row=0, column=1)
 
 class VerificationResultsPage(Page):
     def __init__(self, root, input_data):
-        Page.__init__(self, root, "Verification Results", input_data)
+        super().__init__(root, "Verification Results", input_data)
 
+#if __name__ == "__main__":
 root = ApplicationUI()
 root.mainloop()

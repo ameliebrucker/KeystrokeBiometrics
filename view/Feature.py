@@ -1,5 +1,0 @@
-monograph = "M"
-down_down = "DD"
-up_down = "UD"
-down_up = "DU"
-up_up = "UU"
