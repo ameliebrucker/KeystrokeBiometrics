@@ -1,3 +1,4 @@
+from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
 
@@ -96,6 +97,8 @@ class VerificationPage(Page):
     def __init__(self, root, input_data_identifier):
         super().__init__(root, "Verification", True)
         self.input_data_identifier = input_data_identifier
+        self.learnsamples_identifier = []
+        self.testsamples_identifier = []
 
         #elements in view
         sample_selection = Frame(self)
@@ -112,28 +115,34 @@ class VerificationPage(Page):
         encryption_check = BooleanVar(value=False)
         checkbox_encryption = Checkbutton(self, text="Verification process should be done with encrypted testsamples", variable=encryption_check, onvalue=True, offvalue=False)
         checkbox_encryption.pack()
-        Button(self, text='Start verification process').pack()
-
-        
-        # c = test_list.count(item)
-        # for i in range(c):
-            # test_list.remove(item)
-
+        Button(self, text='Start verification process', command= lambda: c.verify(self.get_selected_learnidentifier(), self.get_selected_testidentifier(), True, root.change_page)).pack()
+            
     def fill_with_input_data(self):
-        output_data_learnsamples = []
-        output_data_testsamples = []
-
         index = 0
         for sample in self.input_data_identifier:
-            # new_default_learn_var = StringVar(value="")
-            # new_default_test_var = StringVar(value="")
-            output_data_learnsamples.append(StringVar(value=""))
-            output_data_testsamples.append(StringVar(value=""))
+            # new entry in list with default value "" (unchecked)
+            self.learnsamples_identifier.append(StringVar(value=""))
+            self.testsamples_identifier.append(StringVar(value=""))
             #TODO put windows untereinander
-            self.learnsamples_overview.window_create(END, window=Checkbutton(self.learnsamples_overview, text=sample, variable=output_data_learnsamples[index], onvalue=sample, offvalue=""))
-            self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=output_data_testsamples[index], onvalue=sample, offvalue=""))
+            self.learnsamples_overview.window_create(END, window=Checkbutton(self.learnsamples_overview, text=sample, variable=self.learnsamples_identifier[index], onvalue=sample, offvalue=""))
+            self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=self.testsamples_identifier[index], onvalue=sample, offvalue=""))
             # , variable=output_data_testsamples[index], onvalue=sample, offvalue=""
             index += 1
+            
+    def get_selected_learnidentifier(self):
+        output_data_learnsamples = []
+        for l in self.learnsamples_identifier:
+            if l.get() != "":
+                output_data_learnsamples.append(l.get())
+        return output_data_learnsamples
+
+    def get_selected_testidentifier(self):
+        output_data_testsamples = []
+        for t in self.testsamples_identifier:
+             if t.get() != "":
+                output_data_testsamples.append(t.get())
+        return output_data_testsamples
+        
        
 
 

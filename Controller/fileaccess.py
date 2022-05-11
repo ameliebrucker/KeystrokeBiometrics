@@ -10,6 +10,7 @@ overview_files_list = []
 identifier_and_filenames = {}
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'Data'))
 
+# initialize lists if not already done
 def fill_all_filelists():
     if not overview_files_list:
         # noch nicht befüllt
@@ -54,9 +55,7 @@ def write_sample_to_file (sample):
 def read_sample_identifier_from_file():
     fill_all_filelists()
     global identifier_and_filenames
-    print ("over " + str(overview_files_list))
     for f in overview_files_list:
-        print ("f " + f)
         try:
             with open (total_path(f), "rb") as file:
                 identifier_and_filenames |= pickle.load(file)
@@ -66,12 +65,16 @@ def read_sample_identifier_from_file():
     return list(identifier_and_filenames.keys())
             
 
-def read_samples_from_file():
-    fill_all_filelists()
+def read_samples_from_files(identifier_list):
+    samples = []
+    for i in identifier_list:
+        with open (total_path(identifier_and_filenames[i]), "rb") as file:
+            samples.append(pickle.load(file))
+    return samples
+
 
 def total_path(filename):
-    total_path = os.path.join(path, filename)
-    print (total_path)
-    return total_path
-    #return path  + "\\" + filename
+    return os.path.join(path, filename)
+
+# evtl. methode wie "remove_broken_data", die file löscht und verweis in overview entfernt, jeweils in try catch block, diese methode dann als handling
 
