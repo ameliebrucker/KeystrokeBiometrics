@@ -19,8 +19,10 @@ class Sample():
 
     # textfield for displaying entered text
     def get_text_and_value_overview(self):
-        return self.content + "\n\n\nRecorded values in ms: " + str(self.values_per_feature_and_char)
+        if self.values_per_feature_and_char:    
+            return self.content + "\n\n\nRecorded values in ms: " + str(self.values_per_feature_and_char)
+        return "No values recorded."
 
     def create_file_name(self):
         # random letters to make filename unique and prevent unusual case: two user with same username entered text on same time (f.e. on different devices)
-        return self.username + str(self.inputtime)
+        return self.username + str(self.inputtime) + ".txt"

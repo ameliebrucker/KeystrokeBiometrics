@@ -157,7 +157,7 @@ class RecordingResultsPage(Page):
         button_group = Frame(self)
         button_group.pack()
         Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=0)
-        Button(button_group, text='Save this record').grid(row=0, column=1)
+        Button(button_group, text='Save this record', command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
 
 class VerificationResultsPage(Page):
     def __init__(self, root, input_data):

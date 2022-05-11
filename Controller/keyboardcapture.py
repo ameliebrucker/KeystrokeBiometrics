@@ -9,13 +9,8 @@ inputtime = None
 
 #appends actions in format (time in ms, char(s), type as number)
 def record_keyboard_entries(event):
-    print(event)
-    # add time in ms, char and eventtype in number (2=down, 3=up)
-    current_time_in_ms = round(time.time()*1000)
-    all_keyboard_actions.append((current_time_in_ms, event.char, event.type))
-    global inputtime
-    if inputtime is None:
-        inputtime = current_time_in_ms
+    # add time in ms, char and eventtype in number (2=down, 3=up) 
+    all_keyboard_actions.append((round(time.time()*1000), event.char, event.type))        
 
 def stop_recording():
     #all keyboard_actions should already be cleaned in extract values func if its working properly
@@ -29,6 +24,11 @@ def stop_recording():
 # extracts values bla bla and stops recording
 def extract_values_per_feature_and_chars(text):
     # wait untig len (all_keyboard_actions) == len(text)
+
+    # set inputtime at end of recording
+    global inputtime
+    inputtime = round(time.time()*1000)
+
     previous_char = None
     for current_char in text:
         current_char_down, current_char_up = find_up_and_down_time(current_char)
@@ -43,8 +43,10 @@ def extract_values_per_feature_and_chars(text):
 
         previous_char = current_char
         previous_char_down, previous_char_up = current_char_down, current_char_up
+
     return values_per_feature_and_chars
 
+# only use from extract_values_per_feature_and_chars
 def find_up_and_down_time(char):
     # find value with down: <EventType.KeyPress: '2'> and char ?
     # lower to avoid unmatching pairs if shift key is released during pressing

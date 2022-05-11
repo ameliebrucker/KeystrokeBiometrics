@@ -1,5 +1,5 @@
 import keyboardcapture
-
+import fileaccess
 from sample import Sample
 
 text_for_comparison = None
@@ -9,23 +9,6 @@ current_sample = None
 forbidden_keycodes = (8, 46, 37, 39)
 
 # keyboard recording
-
-"""
-def form_sample_from_entry(event, callback = None, text="", new_username="Anonym"):
-    if callback is None:
-        keyboardcapture.record_keyboard_entries(event)
-    else:
-        # return key was pressed, keyboard recognition is over
-        values_for_sample = keyboardcapture.extract_values_per_feature_and_chars(text)
-        inputtime = keyboardcapture.inputtime
-        keyboardcapture.stop_recording()
-        global current_sample
-        global current_username
-        current_username = new_username
-        current_sample = Sample(text, inputtime, current_username, values_for_sample)
-        callback (2, current_sample.get_text_and_value_overview())
-"""
-
 def process_keyboard_input(event, text, callback):
     # backspace
     if event.keycode in forbidden_keycodes:
@@ -57,8 +40,9 @@ def get_all_sample_identifier():
     else:
         return("Username41",)
 
-def archive_current_sample(set_text_for_comparison):
-    return ""
+def archive_current_sample(set_text_for_comparison, callback):
+    fileaccess.write_sample_to_file(current_sample)
+    delete_current_sample(set_text_for_comparison, callback)
 
 def delete_current_sample(set_text_for_comparison, callback):
     global current_sample
