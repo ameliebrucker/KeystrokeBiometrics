@@ -1,6 +1,9 @@
-from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
+
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 
 #from keystroke_biometrics.controller.controller import *
 # from Controller import controller as c
@@ -15,7 +18,7 @@ class ApplicationUI (Tk):
         super().__init__()
         self.title("Keystroke Biometrics")
         # self.geometry("500x400")
-         # self.state('zoomed')
+        # self.state('zoomed')
 
         # track current page
         self.all_page_classes = (RecordingPage, VerificationPage, RecordingResultsPage, VerificationResultsPage)
@@ -193,7 +196,33 @@ class VerificationResultsPage(Page):
     def __init__(self, root, input_data_verification):
         super().__init__(root, "Verification Results")
         compared_values, results = input_data_verification
+        #x_thresholds = list(results.keys())
+        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+        y_verification = list(results.values())
+        y_rejection = []
+        for y in y_verification:
+            y_rejection.append(100.00 - y)
+
+        p1, p2 = diagrams[0], diagrams[1]
+        figure, diagrams = plt.subplots(nrows=2, ncols=1)
+        p1.plot(x_thresholds, y_verification, color='green')
+        p1.set_xlabel('Threshold')
+        p1.set_yticks(range(0, 101, 10))
+        p1.set_xticks(x_thresholds)
+        p1.title.set_text("Verification rate in %")
+
+        p2.plot(x_thresholds, y_rejection, color='red')
+        p2.set_xlabel('Threshold')
+        p2.set_yticks(range(0, 101, 10))
+        p2.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1])
+        p2.title.set_text("Rejection rate in %")
+        plt.tight_layout()
+        canvas_plot = FigureCanvasTkAgg(figure, self)
+        canvas_plot.get_tk_widget().pack()
+        
+        Label(self, text="Verifictaion results: " + str(results)).pack()
         Label(self, text="Compared time values: " + str(compared_values)).pack()
+        Button(self, text='Back to sample selection',command=lambda: c.get_all_sample_identifier(root.change_page)).pack()
 
 #if __name__ == "__main__":
 root = ApplicationUI()

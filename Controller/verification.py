@@ -1,4 +1,4 @@
-thresholds = (80, 160, 240, 320, 400, 480, 560, 640, 720, 800)
+thresholds = (800, 720, 640, 560, 480, 400, 320, 240, 160, 80, 0)
 
 # testvalues: [(values_sample_1 = {(f1, c2): [t1, t2], ...), (values_sample_2), ...]
 # modelvalues: {k: t_mean}
