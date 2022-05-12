@@ -1,37 +1,45 @@
 thresholds = (80, 160, 240, 320, 400, 480, 560, 640, 720, 800)
 
-def verify_without_encryption(learnsamples, testsamples):
+# testvalues: [(values_sample_1 = {(f1, c2): [t1, t2], ...), (values_sample_2), ...]
+# modelvalues: {k: t_mean}
+def verify_per_threshold(learnsamples, testsamples, encrypted):
     modelvalues = create_modelvalues(learnsamples)
     print("modelvalues")
     print(str(modelvalues))
+    testvalues_per_sample = []
+    if encrypted:
+        for s in testsamples:
+            testvalues_per_sample.append(create_testvalues_by_nearest_neighbor(modelvalues, s))
+    else:
+        for s in testsamples:
+            testvalues_per_sample.append(s.values_per_feature_and_char)
 
     # dictionary with threshold : number of successful verfications
     results = {}
     for th in thresholds:
         results[th] = 0
-
-    verification_possible = False
-    for testsample in testsamples:
+    compared_values = 0
+    for testvalues in testvalues_per_sample:
         print("testvalues")
-        print(str(testsample.values_per_feature_and_char.items()))
-        vectors = build_vectors_as_list (modelvalues, testsample.values_per_feature_and_char.items())
+        print(str(testvalues))
+        vectors = build_vectors_as_list (modelvalues, testvalues)
         print("vectors")
         print(str(vectors))
-        if (len(vectors) > 0):
-            verification_possible = True
+        vector_size = len(vectors)
+        if (vector_size > 0):
+            compared_values += vector_size
             euklidean_distance = calculate_euklidean_distance(vectors)
             print ("eulidische distance")
             print (euklidean_distance)
-
             # compare threshold with euklidean distance, if <= sample is verified, number of verification rises by 1
             for k, v in results.items():
                 if euklidean_distance <= k:
                     results[k] = v+1
-        print ("verification possible")
-        print (str(verification_possible))
         print ("results")
         print (str(results))
-    return (verification_possible, results)
+        print ("compared Values")
+        print (str(compared_values))
+    return (compared_values, results)
 
 """
 modelbildung
@@ -40,6 +48,8 @@ Aus den Zeiterfassungen [td1, …, tdn] dieser Datenpunkte wird die Durchschnitt
 wird für jede Merkmal-Zeichen-Kombination ein Datenpunkt {fm, cm, tmean} 
 
 """
+# modelvalues: {k: t_mean}
+
 def create_modelvalues(learnsamples):
     # combine values from learnsamples
     model = {}
@@ -50,7 +60,7 @@ def create_modelvalues(learnsamples):
                 model[k].extend(v)
             else:
                 model[k] = v
-    # create model
+    # create model by calculating mean values
     for k, v in model.items():
         # dict nach muster (k: / value= t_mean) entsteht
         size = len(v)
@@ -67,7 +77,7 @@ def create_modelvalues(learnsamples):
 def build_vectors_as_list (modelvalues, testvalues):
      # find matching pairs (fm=ft, cm=ct)
     vectors = []
-    for k, v in testvalues:
+    for k, v in testvalues.items():
         reference_value = modelvalues.get(k, None)
         if reference_value is not None:
             # zeit, da form (f, c): [t1, t2, t3, ...]
@@ -82,24 +92,32 @@ def calculate_euklidean_distance (vector_list):
     for pair in vector_list:
         euklidean_distance += (pair[0] - pair[1])**2
     euklidean_distance = euklidean_distance**0.5
-    print("distanz ohne normalisierung")
-    print(str(euklidean_distance))
     #normalization
     # D (R, U) Norm = D (R, U) / [N]1/2
     euklidean_distance_norm = euklidean_distance / (len(vector_list)**0.5)
     return round(euklidean_distance_norm, 4)
 
+# form {(f, c by nearest neighbor): (t1, t2, ...)}
+# k_test[1] wird ignoriert
 def create_testvalues_by_nearest_neighbor(model, testsample):
-    # form {(f,c): (t1, t2, ...)}
-    test_values = {}
+    testvalues = {}
     # für jeden wert in testsample
     for k_test, v_test in testsample.values_per_feature_and_char.items():
-        nearest_neighbor = None
-        for k_model, v_model in model.items():
-            if (k_test[0] == k_model[0]):
-                # same feature
-                distance = abs(v_test[0] - v_model)
-                if nearest_neighbor is None or distance < nearest_neighbor:
-                    nearest_neighbor = distance
-
+        for t in v_test:
+            nearest_neighbor_key = None
+            # für jedes model wert vergleichen
+            for k_model, v_model in model.items():
+                # fm = ft, same feature
+                if (k_test[0] == k_model[0]):
+                    distance = abs(v_test[0] - v_model)
+                    if nearest_neighbor_key is None or distance < nearest_neighbor_distance:
+                        nearest_neighbor_distance = distance
+                        nearest_neighbor_key = k_model
+            # nearest neighbor was found
+            if (nearest_neighbor_key is not None):
+                if nearest_neighbor_key in testvalues:
+                    testvalues[nearest_neighbor_key].append(t)
+                else:
+                    testvalues[nearest_neighbor_key] = [t]
+    return testvalues
 

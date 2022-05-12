@@ -192,7 +192,7 @@ class RecordingResultsPage(Page):
 class VerificationResultsPage(Page):
     def __init__(self, root, input_data_verification):
         super().__init__(root, "Verification Results")
-        verification_possible, results = input_data_verification
+        compared_values, results = input_data_verification
 
 #if __name__ == "__main__":
 root = ApplicationUI()
