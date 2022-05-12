@@ -1,5 +1,6 @@
 import keyboardcapture
 import fileaccess
+import verification
 from sample import Sample
 
 text_for_comparison = None
@@ -55,4 +56,5 @@ def delete_current_sample(set_text_for_comparison, callback):
 def verify(learnsample_identifier, testsample_identifier, encrypted, callback):
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifier)
     testsamples = fileaccess.read_samples_from_files(testsample_identifier)
-    callback(3)
+    verification.verify_without_encryption(learnsamples, testsamples)
+    #callback(3)
