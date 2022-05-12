@@ -35,10 +35,13 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
             for k, v in results.items():
                 if euklidean_distance <= k:
                     results[k] = v+1
-        print ("results")
-        print (str(results))
-        print ("compared Values")
-        print (str(compared_values))
+    print ("results")
+    print (str(results))
+    # get percentage
+    for k, v in results.items():
+        results[k] = round(v/len(testsamples), 4) * 100
+    print ("results in %")
+    print (str(results))
     return (compared_values, results)
 
 """

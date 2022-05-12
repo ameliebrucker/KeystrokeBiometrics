@@ -57,4 +57,4 @@ def verify(learnsample_identifier, testsample_identifier, encrypted, callback):
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifier)
     testsamples = fileaccess.read_samples_from_files(testsample_identifier)
     verification_output = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
-    #callback(3, verification_output)
+    callback(3, verification_output)

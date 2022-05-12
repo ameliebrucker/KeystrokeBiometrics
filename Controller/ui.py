@@ -193,6 +193,7 @@ class VerificationResultsPage(Page):
     def __init__(self, root, input_data_verification):
         super().__init__(root, "Verification Results")
         compared_values, results = input_data_verification
+        Label(self, text="Compared time values: " + str(compared_values)).pack()
 
 #if __name__ == "__main__":
 root = ApplicationUI()
