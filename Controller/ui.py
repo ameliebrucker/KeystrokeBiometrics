@@ -190,8 +190,9 @@ class RecordingResultsPage(Page):
         Button(button_group, text='Save this record', command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
 
 class VerificationResultsPage(Page):
-    def __init__(self, root, input_data):
+    def __init__(self, root, input_data_verification):
         super().__init__(root, "Verification Results")
+        verification_possible, results = input_data_verification
 
 #if __name__ == "__main__":
 root = ApplicationUI()

@@ -1,19 +1,37 @@
-threshold = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+thresholds = (80, 160, 240, 320, 400, 480, 560, 640, 720, 800)
 
 def verify_without_encryption(learnsamples, testsamples):
     modelvalues = create_modelvalues(learnsamples)
     print("modelvalues")
     print(str(modelvalues))
 
+    # dictionary with threshold : number of successful verfications
+    results = {}
+    for th in thresholds:
+        results[th] = 0
+
+    verification_possible = False
     for testsample in testsamples:
-        vectors = build_vectors_as_list (modelvalues, testsample.values_per_feature_and_char.items())
-        euklidean_distance = calculate_euklidean_distance(vectors)
         print("testvalues")
         print(str(testsample.values_per_feature_and_char.items()))
+        vectors = build_vectors_as_list (modelvalues, testsample.values_per_feature_and_char.items())
         print("vectors")
         print(str(vectors))
-        print ("eulidische distance")
-        print (euklidean_distance)
+        if (len(vectors) > 0):
+            verification_possible = True
+            euklidean_distance = calculate_euklidean_distance(vectors)
+            print ("eulidische distance")
+            print (euklidean_distance)
+
+            # compare threshold with euklidean distance, if <= sample is verified, number of verification rises by 1
+            for k, v in results.items():
+                if euklidean_distance <= k:
+                    results[k] = v+1
+        print ("verification possible")
+        print (str(verification_possible))
+        print ("results")
+        print (str(results))
+    return (verification_possible, results)
 
 """
 modelbildung
