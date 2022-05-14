@@ -48,9 +48,7 @@ def form_sample_from_entry(text, new_username, callback):
     next page number, overview of content and values from new sample via callback
     """
 
-    values_for_sample = keyboardcapture.extract_values_per_feature_and_chars(text)
-    inputtime = keyboardcapture.inputtime
-    keyboardcapture.stop_recording()
+    values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(text)
     global current_sample
     global current_username
     current_username = new_username
