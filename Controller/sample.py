@@ -14,7 +14,10 @@ class Sample():
         maxlength = 60
         identifier = self.username + " (" + self.get_formatted_inputtime() + ") "
         maxlength -= len(identifier)
-        identifier += self.content[:maxlength] + "..."
+        if len(self.content) > maxlength:
+            identifier += self.content[:maxlength - 3] + "..."
+        else:
+            identifier += self.content
         return identifier
 
     # textfield for displaying entered text

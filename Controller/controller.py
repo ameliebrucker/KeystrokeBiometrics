@@ -150,9 +150,9 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
             y_rejection.append(100.00 - v)
             # append acceptance and rejection values to text
             acceptance_as_text += (f"{x_thresholds[index]} ({k}ms) - {v}%\n")
-            acceptance_as_text += (f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n")
+            rejection_as_text += (f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n")
             index += 1
-        results_as_text = "Results\n" + acceptance_as_text + rejection_as_text + "\nCompared time values: " + str(compared_values)
+        results_as_text = (f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}")
         # show page 3 with results as text and chart data
         callback(3, (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:

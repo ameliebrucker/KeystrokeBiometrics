@@ -197,7 +197,7 @@ class VerificationResultsPage(Page):
         super().__init__(root, "Verification Results")
 
         if input_data_verification is None:
-            Label(self, text="No results").pack()
+            Label(self, text="The selected samples do not contain comparable data. Tip: Choose samples that match in some characters.").pack()
         else:
             results_as_text, x_thresholds, y_acceptance, y_rejection = input_data_verification
         

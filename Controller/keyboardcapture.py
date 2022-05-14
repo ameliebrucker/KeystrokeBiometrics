@@ -1,9 +1,8 @@
 import time
 from feature import Feature
 
-# list with tuples of time in milliseconds, character and eventtype as number (2=down, 3=up) for every keystroke event
+# list of tuples with time in milliseconds, character and eventtype as number (2=down, 3=up) for every keystroke event
 all_keyboard_actions = []
-#down_event_type = <EventType.KeyPress: '2'>
 
 def record_keyboard_entries(event):
     """
