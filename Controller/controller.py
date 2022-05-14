@@ -9,6 +9,7 @@ current_sample = None
 # keycodes for backspace, del, ->, <- (evtl. gar nicht alle nötig?)
 forbidden_keycodes = (8, 46, 37, 39)
 
+
 # keyboard recording
 def process_keyboard_input(event, text, callback):
     # backspace
@@ -56,5 +57,20 @@ def delete_current_sample(set_text_for_comparison, callback):
 def verify(learnsample_identifier, testsample_identifier, encrypted, callback):
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifier)
     testsamples = fileaccess.read_samples_from_files(testsample_identifier)
-    verification_output = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
-    callback(3, verification_output)
+    #verification_output = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
+    #callback(3, verification_output)
+    compared_values, results = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
+    if compared_values > 0:
+        results_as_text = "Results\n\nAcceptance:\n"
+        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+        y_acceptance = list(results.values())
+        y_rejection = []
+        for k, v in results.items():
+            y_rejection.append(100.00 - v)
+            results_as_text += str(k) + "ms - " + str(v) + "%\n"
+        results_as_text += "\nCompared time values: " + str(compared_values)
+        print (str(y_rejection))
+        callback(3, (x_thresholds, y_acceptance, y_rejection, results_as_text))
+    else:
+        callback(3)
+    

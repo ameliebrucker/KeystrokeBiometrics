@@ -193,36 +193,43 @@ class RecordingResultsPage(Page):
         Button(button_group, text='Save this record', command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
 
 class VerificationResultsPage(Page):
-    def __init__(self, root, input_data_verification):
+    def __init__(self, root, input_data_verification = None):
         super().__init__(root, "Verification Results")
-        compared_values, results = input_data_verification
-        #x_thresholds = list(results.keys())
-        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
-        y_verification = list(results.values())
-        y_rejection = []
-        for y in y_verification:
-            y_rejection.append(100.00 - y)
 
-        p1, p2 = diagrams[0], diagrams[1]
-        figure, diagrams = plt.subplots(nrows=2, ncols=1)
-        p1.plot(x_thresholds, y_verification, color='green')
-        p1.set_xlabel('Threshold')
-        p1.set_yticks(range(0, 101, 10))
-        p1.set_xticks(x_thresholds)
-        p1.title.set_text("Verification rate in %")
-
-        p2.plot(x_thresholds, y_rejection, color='red')
-        p2.set_xlabel('Threshold')
-        p2.set_yticks(range(0, 101, 10))
-        p2.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1])
-        p2.title.set_text("Rejection rate in %")
-        plt.tight_layout()
-        canvas_plot = FigureCanvasTkAgg(figure, self)
-        canvas_plot.get_tk_widget().pack()
+        if input_data_verification is None:
+            Label(self, text="No results").pack()
+        else:
+            x_thresholds, y_acceptance, y_rejection, results_as_text = input_data_verification
         
-        Label(self, text="Verifictaion results: " + str(results)).pack()
-        Label(self, text="Compared time values: " + str(compared_values)).pack()
-        Button(self, text='Back to sample selection',command=lambda: c.get_all_sample_identifier(root.change_page)).pack()
+            # textfield for displaying entered text
+            result_text_box = ScrolledText(self, height=30, width=100)
+            result_text_box.configure(state ='disabled')
+            result_text_box.pack()
+
+            #diagrams
+            y_ticks = range(0, 101, 10)
+            # x_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
+            figure, diagrams = plt.subplots(nrows=2, ncols=1)
+            p1, p2 = diagrams[0], diagrams[1]
+
+            p1.plot(x_thresholds, y_acceptance, color='green')
+            p1.set_xlabel('Threshold')
+            p1.set_yticks(y_ticks)
+            p1.set_xticks(x_thresholds)
+            p1.title.set_text("Acceptance rate in %")
+
+            p2.plot(x_thresholds, y_rejection, color='red')
+            p2.set_xlabel('Threshold')
+            p2.set_yticks(y_ticks)
+            p2.set_xticks(x_thresholds)
+            p2.title.set_text("Rejection rate in %")
+            plt.tight_layout()
+            canvas_plot = FigureCanvasTkAgg(figure, result_text_box)
+
+            result_text_box.window_create(END, window=canvas_plot.get_tk_widget())
+            result_text_box.window_create(END, window=Label(result_text_box, text=results_as_text))
+
+        Button(self, text='Back to sample selection', command=lambda: c.get_all_sample_identifier(root.change_page)).pack()
 
 #if __name__ == "__main__":
 root = ApplicationUI()

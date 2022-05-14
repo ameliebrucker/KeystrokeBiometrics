@@ -39,7 +39,7 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     print (str(results))
     # get percentage
     for k, v in results.items():
-        results[k] = round(v/len(testsamples), 4) * 100
+        results[k] = round(v/len(testsamples) * 100, 2)
     print ("results in %")
     print (str(results))
     return (compared_values, results)
