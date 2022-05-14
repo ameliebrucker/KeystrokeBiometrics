@@ -76,7 +76,7 @@ def archive_current_sample(set_text_for_comparison, callback):
     archives current sample and calls delete_current_sample function
 
     Parameter:
-    set_text_for_comparison: boolean, indicating whether current content should be used as comparison text
+    set_text_for_comparison: boolean, indicates whether current content should be used as comparison text
     callback: callback function for page change to pass on to delete_current_sample function
 
     Precondition:
