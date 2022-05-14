@@ -100,8 +100,8 @@ class VerificationPage(Page):
     def __init__(self, root, input_data_identifier):
         super().__init__(root, "Verification", True)
         self.input_data_identifier = input_data_identifier
-        self.learnsamples_identifier = []
-        self.testsamples_identifier = []
+        self.learnsamples_identifiers = []
+        self.testsamples_identifiers = []
 
         #elements in view
         sample_selection = Frame(self)
@@ -127,21 +127,21 @@ class VerificationPage(Page):
         index = 0
         for sample in self.input_data_identifier:
             # new entry in list with default value "" (unchecked)
-            self.learnsamples_identifier.append(StringVar(value=""))
-            self.testsamples_identifier.append(StringVar(value=""))
+            self.learnsamples_identifiers.append(StringVar(value=""))
+            self.testsamples_identifiers.append(StringVar(value=""))
             #TODO put windows untereinander
-            self.learnsamples_overview.window_create(END, window=Checkbutton(self.learnsamples_overview, text=sample, variable=self.learnsamples_identifier[index], onvalue=sample, offvalue=""))
-            self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=self.testsamples_identifier[index], onvalue=sample, offvalue=""))
+            self.learnsamples_overview.window_create(END, window=Checkbutton(self.learnsamples_overview, text=sample, variable=self.learnsamples_identifiers[index], onvalue=sample, offvalue=""))
+            self.testsamples_overview.window_create(END, window=Checkbutton(self.testsamples_overview, text=sample, variable=self.testsamples_identifiers[index], onvalue=sample, offvalue=""))
             # , variable=output_data_testsamples[index], onvalue=sample, offvalue=""
             index += 1
 
     def starting_verification(self, callback):
         output_learnsamples = []
         output_testsamples = []
-        for l in self.learnsamples_identifier:
+        for l in self.learnsamples_identifiers:
             if l.get() != "":
                 output_learnsamples.append(l.get())
-        for t in self.testsamples_identifier:
+        for t in self.testsamples_identifiers:
              if t.get() != "":
                 output_testsamples.append(t.get())
         if not output_learnsamples or not output_testsamples:
@@ -199,7 +199,7 @@ class VerificationResultsPage(Page):
         if input_data_verification is None:
             Label(self, text="No results").pack()
         else:
-            x_thresholds, y_acceptance, y_rejection, results_as_text = input_data_verification
+            results_as_text, x_thresholds, y_acceptance, y_rejection = input_data_verification
         
             # textfield for displaying entered text
             result_text_box = ScrolledText(self, height=30, width=100)

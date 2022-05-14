@@ -18,7 +18,7 @@ class Sample():
         return identifier
 
     # textfield for displaying entered text
-    def get_text_and_value_overview(self):
+    def get_content_and_values_overview(self):
         if self.values_per_feature_and_char:    
             return self.content + "\n\n\nRecorded values in ms: " + str(self.values_per_feature_and_char)
         return "No values recorded."

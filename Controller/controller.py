@@ -6,27 +6,48 @@ from sample import Sample
 text_for_comparison = None
 current_username = "Anonym"
 current_sample = None
-# keycodes for backspace, del, ->, <- (evtl. gar nicht alle nötig?)
+# keycodes for backspace, del, arrow keys (->, <-)
 forbidden_keycodes = (8, 46, 37, 39)
 
-
-# keyboard recording
 def process_keyboard_input(event, text, callback):
-    # backspace
+    """
+    processes event from keyboard input, detects incorrect characters and and reacts to them
+
+    Parameter:
+    event: keystroke event from typing in text field
+    text: text field content at the time of function call
+    callback: callback function after detecting invalid character with parameter whether content comparison failed
+
+    Return:
+    result of character validation via callback
+    """
+
     if event.keycode in forbidden_keycodes:
+        # input contains forbidden characters
         keyboardcapture.stop_recording()
-        callback(False)
-        return
+        return callback(False)
     if text_for_comparison is not None:
         if text != text_for_comparison[:len(text)]:
+            # input does not match required content
             keyboardcapture.stop_recording()
-            callback(True)
-            return
+            return callback(True)
+    # input accepted, record keystrokes
     keyboardcapture.record_keyboard_entries(event)
 
 
 def form_sample_from_entry(text, new_username, callback):
-    # return key was pressed, keyboard recognition is over
+    """
+    creates new sample from collected data and terminates current input
+
+    Parameter:
+    text: text field content at the time of function call
+    new_username: username specified by the user for the current entry
+    callback: callback function for page change after sample creation 
+
+    Return:
+    next page number, overview of content and values from new sample via callback
+    """
+
     values_for_sample = keyboardcapture.extract_values_per_feature_and_chars(text)
     inputtime = keyboardcapture.inputtime
     keyboardcapture.stop_recording()
@@ -34,17 +55,51 @@ def form_sample_from_entry(text, new_username, callback):
     global current_username
     current_username = new_username
     current_sample = Sample(text, inputtime, current_username, values_for_sample)
-    callback (2, current_sample.get_text_and_value_overview())       
+    # show page 2 with overview of sample content and values
+    callback (2, current_sample.get_content_and_values_overview())       
 
 def get_all_sample_identifier(callback):
+    """
+    retrieves identifiers for archived samples
+
+    Parameter:
+    callback: callback function for showing new page with all identifiers
+
+    Return:
+    next page number, identifiers for archived samples via callback
+    """
+
     all_identifier = fileaccess.read_sample_identifier_from_file()
+    # show page 1 with identifier
     callback (1, all_identifier)
 
 def archive_current_sample(set_text_for_comparison, callback):
+    """
+    archives current sample and calls delete_current_sample function
+
+    Parameter:
+    set_text_for_comparison: boolean, indicating whether current content should be used as comparison text
+    callback: callback function for page change to pass on to delete_current_sample function
+
+    Precondition:
+    current_sample is not None (form_sample_from_entry() has been executed)
+    """
+    
     fileaccess.write_sample_to_file(current_sample)
     delete_current_sample(set_text_for_comparison, callback)
 
 def delete_current_sample(set_text_for_comparison, callback):
+    """
+    prepares new input by removing old data (current sample) from intermediate storage
+
+    Parameter:
+    set_text_for_comparison: boolean, indicating whether current content should be used as comparison text
+    callback: callback function for page change after deleting current sample
+
+    Return:
+    next page number via callback
+    """
+    
     global current_sample
     global text_for_comparison
     if set_text_for_comparison:
@@ -52,25 +107,57 @@ def delete_current_sample(set_text_for_comparison, callback):
     else:
         text_for_comparison = None
     current_sample = None
+    # show page 0
     callback(0)
 
-def verify(learnsample_identifier, testsample_identifier, encrypted, callback):
-    learnsamples = fileaccess.read_samples_from_files(learnsample_identifier)
-    testsamples = fileaccess.read_samples_from_files(testsample_identifier)
-    #verification_output = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
-    #callback(3, verification_output)
+def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback):
+    """
+    performs verification process and provides values for displaying result as text and diagrams
+
+    Parameter:
+    learnsample_identifiers: list of learsample identifiers
+    testsample_identifiers: list of testsample identifiers
+    encrypted: boolean, indicating whether verification process should be performed with encrypted testsamples
+    callback: callback function for page change and result data transfer
+
+    Return:
+    next page number, verification results as text and chart values:
+        list of x values for acceptance diagram and rejection diagram
+        list of y values for acceptance diagram
+        list of y values for rejection diagram,
+    via callback
+
+    Precondition:
+    learnsamples and testsamples from identifiers have been archived
+    """
+
+    # get archived learnsamples and testsamples by identifiers
+    learnsamples = fileaccess.read_samples_from_files(learnsample_identifiers)
+    testsamples = fileaccess.read_samples_from_files(testsample_identifiers)
+    # perform verification process
     compared_values, results = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
     if compared_values > 0:
-        results_as_text = "Results\n\nAcceptance:\n"
+        # samples contained comparable data
+        # set thresholds as number between 0 and 1 as list
         x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+        # set acceptance and rejection values as list
         y_acceptance = list(results.values())
         y_rejection = []
+
+        acceptance_as_text = "\nAcceptance:\n"
+        rejection_as_text = "\nRejection:\n"
+        index = 0
         for k, v in results.items():
+            # fill list of rejection values based on results
             y_rejection.append(100.00 - v)
-            results_as_text += str(k) + "ms - " + str(v) + "%\n"
-        results_as_text += "\nCompared time values: " + str(compared_values)
-        print (str(y_rejection))
-        callback(3, (x_thresholds, y_acceptance, y_rejection, results_as_text))
+            # append acceptance and rejection values to text
+            acceptance_as_text += (f"{x_thresholds[index]} ({k}ms) - {v}%\n")
+            acceptance_as_text += (f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n")
+            index += 1
+        results_as_text = "Results\n" + acceptance_as_text + rejection_as_text + "\nCompared time values: " + str(compared_values)
+        # show page 3 with results as text and chart data
+        callback(3, (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:
+        # show page 3
         callback(3)
     
