@@ -6,7 +6,7 @@ overview_files_list = []
 # dictionary with identifier and filename per sample
 identifier_and_filenames = {}
 # path for data directory
-path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'Data'))
+path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
 
 def fill_filelists():
     """

@@ -1,5 +1,5 @@
 import time
-from feature import Feature
+from cont.feature import Feature
 
 # list of tuples with time in milliseconds, character and eventtype as number (2=down, 3=up) for every keystroke event
 all_keyboard_actions = []

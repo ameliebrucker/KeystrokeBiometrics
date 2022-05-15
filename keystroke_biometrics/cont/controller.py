@@ -1,7 +1,7 @@
-import keyboardcapture
-import fileaccess
-import verification
-from sample import Sample
+import cont.keyboardcapture as keyboardcapture
+import cont.fileaccess as fileaccess
+import cont.verification as verification
+from cont.sample import Sample
 
 text_for_comparison = None
 current_username = "Anonym"
