@@ -38,7 +38,7 @@ def write_sample_to_file (sample):
     """
 
     fill_filelists()
-    sample_filename = sample.create_file_name()
+    sample_filename = sample.get_file_name()
     sample_identifier = sample.get_short_identifier()
     # add filename for new sample to dictionary in overview file
     if not overview_files_list:

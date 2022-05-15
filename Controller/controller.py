@@ -48,13 +48,17 @@ def form_sample_from_entry(text, new_username, callback):
     next page number, overview of content and values from new sample via callback
     """
 
-    values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(text)
-    global current_sample
-    global current_username
-    current_username = new_username
-    current_sample = Sample(text, inputtime, current_username, values_for_sample)
-    # show page 2 with overview of sample content and values
-    callback (2, current_sample.get_content_and_values_overview())       
+    if len(text) > 0:
+        values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(text)
+        global current_sample
+        global current_username
+        current_username = new_username
+        current_sample = Sample(text, inputtime, current_username, values_for_sample)
+        # show page 2 with overview of sample content and values
+        callback (2, current_sample.get_content_and_values_overview())
+    else:
+        keyboardcapture.stop_recording()
+        callback(2)    
 
 def get_all_sample_identifier(callback):
     """
@@ -149,10 +153,10 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
             # fill list of rejection values based on results
             y_rejection.append(100.00 - v)
             # append acceptance and rejection values to text
-            acceptance_as_text += (f"{x_thresholds[index]} ({k}ms) - {v}%\n")
-            rejection_as_text += (f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n")
+            acceptance_as_text += f"{x_thresholds[index]} ({k}ms) - {v}%\n"
+            rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n"
             index += 1
-        results_as_text = (f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}")
+        results_as_text = f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}"
         # show page 3 with results as text and chart data
         callback(3, (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:

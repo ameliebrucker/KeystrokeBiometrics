@@ -22,7 +22,7 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
             testvalues_per_sample.append(create_testvalues_by_nearest_neighbor(modelvalues, s))
     else:
         for s in testsamples:
-            testvalues_per_sample.append(s.values_per_feature_and_char)
+            testvalues_per_sample.append(s.values_per_feature_and_chars)
     compared_values = 0
     # create results dictionary with key: threshold, value: number of successful verfications
     results = {}
@@ -67,7 +67,7 @@ def create_modelvalues(learnsamples):
     model = {}
     # for every sample put values in model dictionary
     for s in learnsamples:
-        for k, v in s.values_per_feature_and_char.items():
+        for k, v in s.values_per_feature_and_chars.items():
             if k in model:
                 # key is already in model dictionary, add time value to list
                 model[k].extend(v)
@@ -147,7 +147,7 @@ def create_testvalues_by_nearest_neighbor(model, testsample):
     
     testvalues = {}
     # for each value in testsample search for nearest neighbor
-    for k_test, v_test in testsample.values_per_feature_and_char.items():
+    for k_test, v_test in testsample.values_per_feature_and_chars.items():
         for t in v_test:
             nearest_neighbor_key = None
             # compare each value from model with test value

@@ -64,15 +64,19 @@ class RecordingPage(Page):
         self.username_entry.grid(row=0, column=1)
 
         #entry field for keystroke recognition
-        self.input_text_box = Text(self, height=12, width=80)
+        self.focus_in_textbox = False
+        self.input_textbox = Text(self, height=12, width=80)
         #text_box.bind("<KeyPress>", c.validate_keyboard_entries)
-        self.input_text_box.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_text_box.get(1.0, "end-1c"), self.input_validation_failed))
-        self.input_text_box.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_text_box.get(1.0, "end-1c"), self.input_validation_failed))
+        self.input_textbox.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), self.input_validation_failed))
+        self.input_textbox.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), self.input_validation_failed))
+        self.input_textbox.bind("<FocusIn>", lambda e: self.focus_textbox(True))
+        self.input_textbox.bind("<FocusOut>", lambda e: self.focus_textbox(False))
+        self.input_textbox.bind("<Button>", lambda e: self.disable_clicks())
         #text_box.bind("<KeyRelease>",c.form_sample_from_entry)
         # zeichenkette bis zu return taste
-        self.input_text_box.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_text_box.get(1.0, "end-1c"), self.username.get(), root.change_page))
+        self.input_textbox.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_textbox.get(1.0, "end-1c"), self.username.get(), root.change_page))
         # text_box = Entry(self)
-        self.input_text_box.pack()
+        self.input_textbox.pack()
 
         #required text
         if c.text_for_comparison is not None:
@@ -83,13 +87,22 @@ class RecordingPage(Page):
         self.tooltip = Label (self, text = "Please type your sample text as fluent as possible in the box above. Avoid deleting characters or changing the cursor position. Finish your entry by pressing the enter key.")
         self.tooltip.pack()
     
+    def focus_textbox(self, focus):
+        self.focus_in_textbox = focus
+
+    def disable_clicks(self):
+        if self.focus_in_textbox:
+            print("hi")
+            self.input_textbox.mark_set(INSERT, END)
+            return("break")
+    
     def limit_username_length(self, event):
         #limit to 30 characters to avoid problems with long input
         if len(self.username_entry.get()) > 29:
             self.username_entry.delete(29, END)
 
     def input_validation_failed(self, comparison_failed):
-        self.input_text_box.delete("1.0","end")
+        self.input_textbox.delete("1.0","end")
         if comparison_failed:
             self.required_text_tip.config(bg= "red")
         else:
@@ -170,27 +183,32 @@ class VerificationPage(Page):
     """     
 
 class RecordingResultsPage(Page):
-    def __init__(self, root, input_data_content_and_values):
+    def __init__(self, root, input_data_content_and_values = None):
         super().__init__(root, "Recording Results")
+        results = input_data_content_and_values
+        state_save_button = NORMAL
+        if results is None:
+            results = "No values recorded."
+            state_save_button = DISABLED
 
         # textfield for displaying entered text
         result_text_box = ScrolledText(self, height=12, width=80)
-        result_text_box.insert(INSERT, input_data_content_and_values)
-        result_text_box.configure(state ='disabled')
+        result_text_box.insert(INSERT, results)
+        result_text_box.configure(state =DISABLED)
         result_text_box.pack()
 
         # checkbox keep entry as reference for next entrys
         reference_entry_check = BooleanVar(value=False)
-        if c.text_for_comparison is not None:
+        if c.text_for_comparison is not None and state_save_button is not DISABLED:
             reference_entry_check.set(True)
-        checkbox_reference_entry = Checkbutton(self, text="Keep this text as validation reference for next entry", variable=reference_entry_check, onvalue=True, offvalue=False)
+        checkbox_reference_entry = Checkbutton(self, text="Keep this text as validation reference for next entry", state=state_save_button, variable=reference_entry_check, onvalue=True, offvalue=False)
         checkbox_reference_entry.pack()
 
         # button group
         button_group = Frame(self)
         button_group.pack()
         Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=0)
-        Button(button_group, text='Save this record', command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
+        Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
 
 class VerificationResultsPage(Page):
     def __init__(self, root, input_data_verification = None):
