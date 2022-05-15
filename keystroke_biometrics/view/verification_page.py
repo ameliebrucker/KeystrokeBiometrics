@@ -1,9 +1,13 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from view.page import Page
-import cont.controller as c
+import controller.application_logic as c
 
 class VerificationPage(Page):
+    """
+    A class for representing the verification page of the user interface
+    """
+
     def __init__(self, root, input_data_identifier):
         super().__init__(root, "Verification", True)
         self.input_data_identifier = input_data_identifier

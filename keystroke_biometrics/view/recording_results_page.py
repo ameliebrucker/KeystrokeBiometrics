@@ -1,9 +1,13 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from view.page import Page
-import cont.controller as c
+import controller.application_logic as c
 
 class RecordingResultsPage(Page):
+    """
+    A class for representing the recording results page of the user interface
+    """
+
     def __init__(self, root, input_data_content_and_values = None):
         super().__init__(root, "Recording Results")
         results = input_data_content_and_values

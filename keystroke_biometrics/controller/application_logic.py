@@ -1,7 +1,7 @@
-import cont.keyboardcapture as keyboardcapture
-import cont.fileaccess as fileaccess
-import cont.verification as verification
-from cont.sample import Sample
+import controller.keyboardcapture as keyboardcapture
+import controller.fileaccess as fileaccess
+import controller.verification as verification
+from model.sample import Sample
 
 text_for_comparison = None
 current_username = "Anonym"

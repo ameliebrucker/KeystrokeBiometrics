@@ -1,11 +1,15 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from view.page import Page
-import cont.controller as c
+import controller.application_logic as c
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
 class VerificationResultsPage(Page):
+    """
+    A class for representing the verification results page of the user interface
+    """
+
     def __init__(self, root, input_data_verification = None):
         super().__init__(root, "Verification Results")
 
