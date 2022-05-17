@@ -8,6 +8,19 @@ identifier_and_filenames = {}
 # path for data directory
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
 
+def total_path(filename):
+    """
+    forms total path out of path for data directory and filename
+
+    Parameter:
+    filename: filename for the total path
+
+    Return:
+    total path including filename
+    """
+    
+    return os.path.join(path, filename)
+
 def fill_filelists():
     """
     fills overview_files_list and sample_files_list with file names from directory if not already done
@@ -112,17 +125,3 @@ def read_samples_from_files(identifier_list):
         with open (total_path(identifier_and_filenames[i]), "rb") as file:
             samples.append(pickle.load(file))
     return samples
-
-
-def total_path(filename):
-    """
-    forms total path out of path for data directory and filename
-
-    Parameter:
-    filename: filename for the total path
-
-    Return:
-    total path including filename
-    """
-    
-    return os.path.join(path, filename)

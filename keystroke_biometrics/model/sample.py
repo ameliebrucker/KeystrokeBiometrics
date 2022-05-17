@@ -26,6 +26,9 @@ class Sample():
         """
         gives an identifier of the sample containing username, formatted inputtime and short content
 
+        Return:
+        identifier as string
+
         Precondition:
         content, inputtime and username are initialized
         """
@@ -45,6 +48,9 @@ class Sample():
         """
         gives a formatted summary of content and values per features and chars
 
+        Return:
+        content and values per features and chars as string
+
         Precondition:
         content and values_per_feature_and_chars are initialized
         """
@@ -55,6 +61,9 @@ class Sample():
     def get_file_name(self):
         """
         gives a file name for the sample containing username and inputtime in milliseconds
+
+        Return:
+        filename as string
 
         Precondition:
         username and inputtime are initialized

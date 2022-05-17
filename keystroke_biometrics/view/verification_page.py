@@ -59,23 +59,3 @@ class VerificationPage(Page):
             self.tooltip.config(bg="red")
         else:
             c.verify(output_learnsamples, output_testsamples, self.encryption_check.get(), callback)
-
-    """
-    def get_selected_learnidentifier(self):
-        output_data_learnsamples = []
-        for l in self.learnsamples_identifier:
-            if l.get() != "":
-                output_data_learnsamples.append(l.get())
-        return output_data_learnsamples
-
-    def get_selected_testidentifier(self):
-        output_data_testsamples = []
-        for t in self.testsamples_identifier:
-             if t.get() != "":
-                output_data_testsamples.append(t.get())
-        return output_data_testsamples
-
-    def missing_selection(self):
-        self.tooltip.config(bg="red")
-
-    """     

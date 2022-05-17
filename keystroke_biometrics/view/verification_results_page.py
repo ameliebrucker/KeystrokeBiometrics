@@ -4,6 +4,7 @@ from view.page import Page
 import controller.application_logic as c
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 class VerificationResultsPage(Page):
     """
@@ -19,31 +20,29 @@ class VerificationResultsPage(Page):
             results_as_text, x_thresholds, y_acceptance, y_rejection = input_data_verification
         
             # textfield for displaying entered text
-            result_text_box = ScrolledText(self, height=30, width=100)
+            result_text_box = ScrolledText(self, height=30, width=105)
             result_text_box.configure(state ='disabled')
             result_text_box.pack()
 
             #diagrams
             y_ticks = range(0, 101, 10)
-            # x_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
-            figure, diagrams = plt.subplots(nrows=2, ncols=1)
-            p1, p2 = diagrams[0], diagrams[1]
-
+            figure = Figure(figsize=(6.2, 4.6))
+            p1 = figure.add_subplot(211)
             p1.plot(x_thresholds, y_acceptance, color='green')
             p1.set_xlabel('Threshold')
             p1.set_yticks(y_ticks)
             p1.set_xticks(x_thresholds)
             p1.title.set_text("Acceptance rate in %")
 
+            p2 = figure.add_subplot(212)
             p2.plot(x_thresholds, y_rejection, color='red')
             p2.set_xlabel('Threshold')
             p2.set_yticks(y_ticks)
             p2.set_xticks(x_thresholds)
             p2.title.set_text("Rejection rate in %")
-            plt.tight_layout()
-            canvas_plot = FigureCanvasTkAgg(figure, result_text_box)
+            figure.tight_layout()
 
-            result_text_box.window_create(tk.END, window=canvas_plot.get_tk_widget())
-            result_text_box.window_create(tk.END, window=tk.Label(result_text_box, text=results_as_text))
+            result_text_box.window_create(tk.END, window=FigureCanvasTkAgg(figure, result_text_box).get_tk_widget())
+            result_text_box.window_create(tk.END, window=tk.Label(result_text_box, text=results_as_text))            
 
         tk.Button(self, text='Back to sample selection', command=lambda: c.get_all_sample_identifier(root.change_page)).pack()

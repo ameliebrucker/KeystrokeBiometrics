@@ -13,8 +13,6 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     number of compared values, results as dictionary with thresholds and acceptance rate in %
     """
     modelvalues = create_modelvalues(learnsamples)
-    print("modelvalues")
-    print(str(modelvalues))
     testvalues_per_sample = []
     if encrypted:
         for s in testsamples:
@@ -30,8 +28,6 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
         results[th] = 0
     # do verification process for every testsample
     for testvalues in testvalues_per_sample:
-        print("testvalues")
-        print(str(testvalues))
         # form vectors from modelvalues and testvalues
         vectors = build_vectors_as_list (modelvalues, testvalues)
         vector_size = len(vectors)
@@ -39,7 +35,7 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
             # model and testvalues are comparable
             compared_values += vector_size
             euklidean_distance = calculate_euklidean_distance(vectors)
-            print ("eulidische distance")
+            print ("euklidische distance")
             print (euklidean_distance)
             # compare all thresholds with euklidean distance
             for k, v in results.items():
@@ -49,8 +45,6 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     # calculate acceptance rate in percentage 
     for k, v in results.items():
         results[k] = round(v/len(testsamples) * 100, 2)
-    print ("results in %")
-    print (str(results))
     return (compared_values, results)
 
 def create_modelvalues(learnsamples):

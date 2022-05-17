@@ -35,12 +35,12 @@ def process_keyboard_input(event, text, callback):
     keyboardcapture.record_keyboard_entries(event)
 
 
-def form_sample_from_entry(text, new_username, callback):
+def form_sample_from_entry(content, new_username, callback):
     """
     creates new sample from collected data and terminates current input
 
     Parameter:
-    text: text field content at the time of function call
+    content: text field content at the time of function call
     new_username: username specified by the user for the current entry
     callback: callback function for page change after sample creation 
 
@@ -48,12 +48,12 @@ def form_sample_from_entry(text, new_username, callback):
     next page number, overview of content and values from new sample via callback
     """
 
-    if len(text) > 0:
-        values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(text)
+    if len(content) > 0:
+        values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(content)
         global current_sample
         global current_username
         current_username = new_username
-        current_sample = Sample(text, inputtime, current_username, values_for_sample)
+        current_sample = Sample(content, inputtime, current_username, values_for_sample)
         # show page 2 with overview of sample content and values
         callback (2, current_sample.get_content_and_values_overview())
     else:
@@ -151,10 +151,11 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
         index = 0
         for k, v in results.items():
             # fill list of rejection values based on results
-            y_rejection.append(100.00 - v)
+            rejection_value = round(100 - v, 2)
+            y_rejection.append(rejection_value)
             # append acceptance and rejection values to text
             acceptance_as_text += f"{x_thresholds[index]} ({k}ms) - {v}%\n"
-            rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {100.00-v}%\n"
+            rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {rejection_value}%\n"
             index += 1
         results_as_text = f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}"
         # show page 3 with results as text and chart data

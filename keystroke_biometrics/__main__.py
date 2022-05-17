@@ -1,3 +1,3 @@
-from view.ui import run_application
+from view.application_ui import start_application
 
-run_application()
+start_application()

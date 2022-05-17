@@ -65,14 +65,14 @@ def extract_values_per_feature_and_chars(text):
 
 def find_next_down_and_up_time(char):
     """
-    finds next tuple for key press and release for given char, returns time and deletes tuple from all_keyboard_actions
+    gives next tuple for key press and release for given char, deletes tuple from all_keyboard_actions
 
     Parameter:
     char: char for which tuples should be found
 
     Return:
-    down: time which belongs to next key press for char
-    up: time which belongs to next key release for char
+    down: tuple which belongs to next key press for char
+    up: tuple which belongs to next key release for char
 
     Precondition:
     list all_keyboard_actions has been initialized
@@ -87,7 +87,7 @@ def find_next_down_and_up_time(char):
         all_keyboard_actions.remove(down)
     if up is not None:
         all_keyboard_actions.remove(up)
-    return down[0], up[0]
+    return down, up
 
 def create_value_entry (featurename, minuend, subtrahend, chars, values_per_feature_and_chars):
     """
@@ -95,14 +95,14 @@ def create_value_entry (featurename, minuend, subtrahend, chars, values_per_feat
 
     Parameter:
     featurename: name of the currently observed feature
-    minuend: minuend in subtraction for time calculation
-    subtrahend: subtrahend in subtraction for time calculation
+    minuend: tuple with time value, which is minuend in time calculation
+    subtrahend: tuple with time value, which is subtrahend in time calculation
     chars: currently observed chars
     values_per_feature_and_chars: dictionary in which entries should be inserted
     """
 
     if minuend is not None and subtrahend is not None:
-        result = minuend - subtrahend
+        result = minuend[0] - subtrahend[0]
         if (featurename.value, chars) in values_per_feature_and_chars:
             # key is already included in dictionary
             values_per_feature_and_chars[(featurename.value, chars)].append(result)

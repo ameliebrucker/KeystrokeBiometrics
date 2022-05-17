@@ -5,32 +5,22 @@ from view.verification_page import VerificationPage
 from view.recording_results_page import RecordingResultsPage
 from view.verification_results_page import VerificationResultsPage
 
-class ApplicationUI (tk.Tk):
+class Application (tk.Tk):
     """
     A class for representing the application of the user interface
 
     Attributes (Object)
-    content: string, total text entered
+    title: title of the application
+    state: state of window dimension
+    all_page_classes: tuple of all pages included in application
+    page_number_from_header: number of current pagegroup (recording or verification) based on navigation buttons from header
+    current_page: currently shown page
 
     Methods
-    get_short_identifier(): gives 
+    change_page(self, page_number, data): changes currently shown page
     """
 
     def __init__(self):
-        """
-        initializes page, therefore adds components to root component
-
-        Parameter:
-        title: title of the application
-        state: state of window dimension
-        all_page_classes: tuple of all pages included in application
-        page_number_from_header: number of current pagegroup (recording or verification) based on navigation buttons from header
-        current_page: currently shown page
-
-        Methods
-        change_page(page_number, data): changes currently shown page
-        """
-
         super().__init__()
         # set title and window dimensions
         self.title("Keystroke Biometrics")
@@ -59,8 +49,10 @@ class ApplicationUI (tk.Tk):
             self.current_page = self.all_page_classes[page_number](self, data)
         self.current_page.pack(fill='x')
 
-#TODO alle daten in input_data übergeben (username, vergleich content)
+def start_application():
+    """
+    starts application by showing user interface
+    """
 
-def run_application():
-    root = ApplicationUI()
+    root = Application()
     root.mainloop()
