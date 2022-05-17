@@ -7,10 +7,10 @@ class RecordingPage(Page):
     A class for representing the recording page of the user interface
 
     Attributes (Object)
-    username_entry = entry widget for username
-    input_textbox = textbox in which keystrokes are recorded
-    required_text_tip = label with tip on required text
-    tooltip = label with tip on how to type
+    username_entry: entry widget for username
+    input_textbox: textbox in which keystrokes are recorded
+    required_text_tip: label with tip on required text
+    tooltip: label with tip on how to type
 
     Methods
     set_cursor_to_end(): sets cursor to the end of input_textbox
@@ -38,10 +38,10 @@ class RecordingPage(Page):
         self.input_textbox.bind("<Button>", lambda e: self.set_cursor_to_end())
         self.input_textbox.pack()
         if c.text_for_comparison is not None:
-            # set tip on required text
+            # add tip on required text
             self.required_text_tip = tk.Label (self, text=f"Required text input: \"{c.text_for_comparison}\"")
             self.required_text_tip.pack()
-        # set tooltip on how to type properly
+        # add tooltip on how to type properly
         self.tooltip = tk.Label (self, text = "Please type your sample text as fluent as possible in the box above. Avoid deleting characters or changing the cursor position. Finish your entry by pressing the enter key.")
         self.tooltip.pack()
 
