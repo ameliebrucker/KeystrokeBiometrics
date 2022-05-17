@@ -6,18 +6,7 @@ class Page(tk.Frame):
     A class for representing a page
     """
 
-    def __init__(self, root, page_name, view_change=False):
-        """
-        initializes page, therefore adds components to root component
-
-        Parameter:
-        page_name: title of the page
-        view_change: boolean, indicates whether the page should contain navigation buttons
-
-        Return:
-        result of character validation via callback
-        """
-        
+    def __init__(self, root, page_name, view_change=False):        
         super().__init__(root)
         # create header
         header = tk.Frame(self)

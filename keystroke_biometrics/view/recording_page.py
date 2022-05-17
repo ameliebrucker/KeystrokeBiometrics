@@ -13,9 +13,9 @@ class RecordingPage(Page):
     tooltip = label with tip on how to type
 
     Methods
-    set_cursor_to_end():
-    limit_username_length(event):
-    input_validation_failed(comparison_failed):
+    set_cursor_to_end(): sets cursor to the end of input_textbox
+    limit_username_length(event): limits username to 30 characters
+    input_validation_failed(comparison_failed): displays information about failing input validation
     """
 
     def __init__(self, root):
@@ -69,12 +69,13 @@ class RecordingPage(Page):
 
     def input_validation_failed(self, comparison_failed):
         """
-        limits username to 30 characters
+        displays information about failing input validation for user
 
         Parameter:
-        event: keystroke event which triggered function
+        comparison_failed: boolean, indicates whether the comparison with the required text failed
         """
-        
+
+        # delete corrupted content completely
         self.input_textbox.delete("1.0", tk.END)
         if comparison_failed:
             self.required_text_tip.config(bg= "red")
