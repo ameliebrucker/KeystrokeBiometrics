@@ -6,7 +6,7 @@ class Page(tk.Frame):
     A class for representing a page
     """
 
-    def __init__(self, root, page_name, view_change=False):        
+    def __init__(self, root, page_name, view_change = False):        
         super().__init__(root)
         # create header
         header = tk.Frame(self)

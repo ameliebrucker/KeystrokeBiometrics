@@ -11,6 +11,9 @@ class VerificationPage(Page):
     checked_identifiers: dictionary with identifiers as key and boolean whether they are selected as values
     encryption_check: boolean, indicates whether learnsamples should be treated as encrypted
     tooltip: label with tip for selection
+
+    Methods
+    starting_verification(callback): summarizes selected samples and starts verification process
     """
 
     def __init__(self, root, input_data_identifier):
@@ -41,14 +44,24 @@ class VerificationPage(Page):
         self.tooltip.pack()
 
     def starting_verification(self, callback):
-        output_learnsamples = []
-        output_testsamples = []
+        """
+        summarizes selected samples and starts verification process
+
+        Parameter:
+        callback: callback passed to verification function
+        """
+
+        selected_learnsamples = []
+        selected_testsamples = []
         for k, v in self.checked_identifiers.items():
             if v[0].get():
-                output_learnsamples.append(k)
+                # box is checked: selected as learnsample
+                selected_learnsamples.append(k)
             if v[1].get():
-                output_testsamples.append(k)
-        if not output_learnsamples or not output_testsamples:
+                # box is checked: selected as testsample
+                selected_testsamples.append(k)
+        if not selected_learnsamples or not selected_testsamples:
+            # nothing selected, show warning
             self.tooltip.config(bg="red")
         else:
-            c.verify(output_learnsamples, output_testsamples, self.encryption_check.get(), callback)
+            c.verify(selected_learnsamples, selected_testsamples, self.encryption_check.get(), callback)
