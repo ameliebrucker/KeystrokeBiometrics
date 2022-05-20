@@ -17,9 +17,6 @@ def process_keyboard_input(event, text, callback):
     event: keystroke event from typing in text field
     text: text field content at the time of function call
     callback: callback function after detecting invalid character with parameter whether content comparison failed
-
-    Return:
-    result of character validation via callback
     """
 
     if event.keycode in forbidden_keycodes:
@@ -43,9 +40,6 @@ def form_sample_from_entry(content, new_username, callback):
     content: text field content at the time of function call
     new_username: username specified by the user for the current entry
     callback: callback function for page change after sample creation 
-
-    Return:
-    next page number, overview of content and values from new sample via callback
     """
 
     if len(content) > 0:
@@ -66,9 +60,6 @@ def get_all_sample_identifier(callback):
 
     Parameter:
     callback: callback function for showing new page with all identifiers
-
-    Return:
-    next page number, identifiers for archived samples via callback
     """
 
     all_identifier = fileaccess.read_sample_identifier_from_file()
@@ -97,9 +88,6 @@ def delete_current_sample(set_text_for_comparison, callback):
     Parameter:
     set_text_for_comparison: boolean, indicating whether current content should be used as comparison text
     callback: callback function for page change after deleting current sample
-
-    Return:
-    next page number via callback
     """
     
     global current_sample
@@ -121,13 +109,6 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
     testsample_identifiers: list of testsample identifiers
     encrypted: boolean, indicating whether verification process should be performed with encrypted testsamples
     callback: callback function for page change and result data transfer
-
-    Return:
-    next page number, verification results as text and chart values:
-        list of x values for acceptance diagram and rejection diagram
-        list of y values for acceptance diagram
-        list of y values for rejection diagram,
-    via callback
 
     Precondition:
     learnsamples and testsamples from identifiers have been archived

@@ -25,14 +25,14 @@ class VerificationPage(Page):
         sample_selection.pack()
         tk.Label(sample_selection, text="Learnsamples for verification process").grid(row=0, column=0)
         tk.Label(sample_selection, text="Testsamples for verification process").grid(row=0, column=1)
-        learnsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=12, width=30)
-        testsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=12, width=30)
+        learnsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=18, width=50)
+        testsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=18, width=50)
         learnsamples_overview.grid(row=1, column=0)
         testsamples_overview.grid(row=1, column=1)
         # add checkbox lists with identifiers
         for k, v in self.checked_identifiers.items():
-            learnsamples_overview.window_create(tk.END, window=tk.Checkbutton(learnsamples_overview, text=k, variable=v[0], onvalue=True, offvalue=False))
-            testsamples_overview.window_create(tk.END, window=tk.Checkbutton(testsamples_overview, text=k, variable=v[1], onvalue=True, offvalue=False))       
+            learnsamples_overview.window_create(tk.END, window=tk.Checkbutton(learnsamples_overview, text=k, variable=v[0], onvalue=True, offvalue=False, bg="white"))
+            testsamples_overview.window_create(tk.END, window=tk.Checkbutton(testsamples_overview, text=k, variable=v[1], onvalue=True, offvalue=False, bg="white"))       
         # add encryption check
         self.encryption_check = tk.BooleanVar(value=False)
         checkbox_encryption = tk.Checkbutton(self, text="Verification process should be done with encrypted testsamples", variable=self.encryption_check, onvalue=True, offvalue=False)
