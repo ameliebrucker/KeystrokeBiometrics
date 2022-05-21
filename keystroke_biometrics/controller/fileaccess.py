@@ -69,20 +69,20 @@ def write_sample_to_file (sample):
                 overview_dic = pickle.load(file)
                 # add current sample to overview dictionary
                 overview_dic[sample_identifier] = sample_filename
-        except EOFError:
-            # overview file is empty, create new dictionary
+        except:
+            # overview file is empty or not correct filled, create new dictionary
             overview_dic = {sample_identifier : sample_filename}
     # write dictionary in overview file
     with open (total_path(overview_filename), "bw") as file:
         pickle.dump(overview_dic, file)
-
     # create new file with sample
     with open (total_path(sample_filename), "bw") as file:
         pickle.dump(sample, file)
+    sample_files_list.append(sample_filename)
 
 def read_sample_identifier_from_file():
     """
-    provides all identifiers for samples from overview files and fills identifier_and_filenames
+    provides all sample identifiers from overview files, corrects them if files were deleted and fills identifier_and_filenames
 
     Return:
     list of all sample identifiers
@@ -93,14 +93,33 @@ def read_sample_identifier_from_file():
 
     fill_filelists()
     global identifier_and_filenames
+    # combine all dictionaries from overview files
     for f in overview_files_list:
         try:
-            # combine all dictionaries from overview files
             with open (total_path(f), "rb") as file:
-                identifier_and_filenames |= pickle.load(file)
+                dict_from_file = pickle.load(file)
+            # check if sample files which are listed in overview were deleted
+            dict_for_file = dict (dict_from_file)
+            for k, v in dict_from_file.items():
+                if v not in sample_files_list:
+                    # sample no longer exists, delete from overview
+                    del dict_for_file[k]
+            dict_for_file_len = len(dict_for_file)
+            if len(dict_from_file) > dict_for_file_len:
+                # there were deleted files
+                if dict_for_file_len == 0:
+                    # all samples from overview were deleted
+                    os.remove(total_path(f))
+                    overview_files_list.remove(f)
+                else:
+                    with open (total_path(f), "bw") as file:
+                        # write corrected dictionary to file
+                        pickle.dump(dict_for_file, file)
+            identifier_and_filenames |= dict_for_file
         except:
             # file f is empty or not correct filled (broken)
             os.remove(total_path(f))
+            overview_files_list.remove(f)
     return list(identifier_and_filenames.keys())
             
 
@@ -121,7 +140,18 @@ def read_samples_from_files(identifier_list):
 
     samples = []
     for i in identifier_list:
-        # read sample from each file, which belongs to identifier
-        with open (total_path(identifier_and_filenames[i]), "rb") as file:
-            samples.append(pickle.load(file))
+        try:
+            # read sample from each file, which belongs to identifier
+            with open (total_path(identifier_and_filenames[i]), "rb") as file:
+                samples.append(pickle.load(file))
+        except:
+            # check if broken file was already removed
+            if i in identifier_and_filenames.keys():
+                # remove broken file
+                # sample will also be removed from overview during next call of read_sample_identifier_from_file() 
+                os.remove(total_path(identifier_and_filenames[i]))
+                sample_files_list.remove(identifier_and_filenames[i])
+                del identifier_and_filenames[i]
+                print (f"File for sample \"{i}\" was broken, it was removed.")
+
     return samples

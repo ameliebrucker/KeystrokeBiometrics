@@ -12,6 +12,9 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     Return:
     number of compared values, results as dictionary with thresholds and acceptance rate in %
     """
+    
+    if not testsamples or not learnsamples:
+        return (0, {})
     modelvalues = create_modelvalues(learnsamples)
     testvalues_per_sample = []
     if encrypted:
@@ -117,6 +120,7 @@ def calculate_euklidean_distance (vector_list):
     """
 
     # euklidean distance: D(R,U) = ((r1 - u1)^2 + ... + (rn - un)^2) ^ 0.5
+    # source: F. Monrose, A. D. Rubin: Keystroke dynamics as a biometric for authentication, 2000, http://www1.cs.columbia.edu/~hgs/teaching/security/hw/keystroke.pdf, page 356 (last visit 21/05/2022)
     euklidean_distance = 0
     # sum each result for (ri - ui)^2
     for pair in vector_list:

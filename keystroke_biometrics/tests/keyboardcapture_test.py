@@ -2,6 +2,15 @@ import controller.keyboardcapture as k
 import unittest
 
 class TestKeyboardcapture(unittest.TestCase):
+    all_keyboard_actions_for_test = [
+        # tuple with milliseconds, character and eventtype as number (2=down, 3=up)
+        (2, 'a', 2),
+        (200, 'a', 3),
+        (400, 'b', 2),
+        (600, 'c', 2),
+        (800, 'b', 3),
+        (1500, 'c', 3)        
+    ]
 
     def test_find_next_down_and_up_time(self):
         # char, all_keyboard_actions

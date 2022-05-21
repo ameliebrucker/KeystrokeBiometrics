@@ -26,7 +26,9 @@ class VerificationPage(Page):
         tk.Label(sample_selection, text="Learnsamples for verification process").grid(row=0, column=0)
         tk.Label(sample_selection, text="Testsamples for verification process").grid(row=0, column=1)
         learnsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=18, width=50)
+        learnsamples_overview.configure(state = tk.DISABLED)
         testsamples_overview = ScrolledText (sample_selection, cursor='arrow', height=18, width=50)
+        testsamples_overview.configure(state = tk.DISABLED)
         learnsamples_overview.grid(row=1, column=0)
         testsamples_overview.grid(row=1, column=1)
         # add checkbox lists with identifiers
