@@ -6,8 +6,8 @@ from model.sample import Sample
 text_for_comparison = None
 current_username = "Anonym"
 current_sample = None
-# keycodes for backspace, del, arrow keys (->, <-)
-forbidden_keycodes = (8, 46, 37, 39)
+# keysymbols for backspace, del, arrow keys (->, <-)
+forbidden_keysyms = ("BackSpace", "Delete", "Right", "Left")
 
 def process_keyboard_input(event, text, callback):
     """
@@ -19,7 +19,7 @@ def process_keyboard_input(event, text, callback):
     callback: callback function after detecting invalid character with parameter whether content comparison failed
     """
 
-    if event.keycode in forbidden_keycodes:
+    if event.keysym in forbidden_keysyms:
         # input contains forbidden characters
         keyboardcapture.stop_recording()
         return callback(False)
