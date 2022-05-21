@@ -4,6 +4,24 @@ from model.feature import Feature
 import unittest
 
 class TestVerification(unittest.TestCase):
+    """
+    A class for testing functions from verification module
+
+    Attributes (Object)
+    modelvalues_for_testing: example modelvalues for test functions
+    testvalues_for_testing: example testvalues for test functions
+    samples_for_testing: example samples for test functions
+
+    Methods
+    setUp(): sets up test values for tests
+    test_calculate_euklidean_distance(self): tests the calculate_euklidean_distance() function
+    test_calculate_euklidean_distance_negative(): tests the calculate_euklidean_distance() function with negative values
+    test_create_modelvalues()): tests the create_modelvalues() function
+    test_build_vectors_as_list(): tests the build_vectors_as_list() function
+    test_build_vectors_as_list_no_match (): tests the build_vectors_as_list() function without a match
+    test_create_testvalues_by_nearest_neighbor(): tests the create_testvalues_by_nearest_neighbor() function
+    test_create_testvalues_by_nearest_neighbor_no_match(): tests the create_testvalues_by_nearest_neighbor() function without a match    
+    """
 
     def setUp(self):
         """
