@@ -47,7 +47,7 @@ def extract_values_per_feature_and_chars(text):
     # for every char in text, determine time values for all recognizable features
     for current_char in text:
         # get up and down time for char
-        current_char_down, current_char_up = find_next_down_and_up_time(current_char)
+        current_char_down, current_char_up = find_next_down_and_up(current_char)
         # determine monograph feature
         create_value_entry(Feature.M, current_char_up, current_char_down, current_char, result)
         if (previous_char is not None):
@@ -59,11 +59,11 @@ def extract_values_per_feature_and_chars(text):
             create_value_entry(Feature.UU, current_char_up, previous_char_up, chars, result)    
         previous_char = current_char
         previous_char_down, previous_char_up = current_char_down, current_char_up
-    # remove old data in case there are unusual records which were not cleaned in find_next_down_and_up_time()
+    # remove old data in case there are unusual records which were not cleaned in find_next_down_and_up()
     stop_recording()
     return result, inputtime
 
-def find_next_down_and_up_time(char):
+def find_next_down_and_up(char):
     """
     gives next tuple for key press and release for given char, deletes tuple from all_keyboard_actions
 
