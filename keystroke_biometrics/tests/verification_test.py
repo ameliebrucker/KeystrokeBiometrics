@@ -13,7 +13,7 @@ class TestVerification(unittest.TestCase):
     samples_for_testing: example samples for test functions
 
     Methods
-    setUp(): sets up test values for tests
+    setUp(): sets up test values for whole class
     test_calculate_euklidean_distance(self): tests the calculate_euklidean_distance() function
     test_calculate_euklidean_distance_negative(): tests the calculate_euklidean_distance() function with negative values
     test_create_modelvalues()): tests the create_modelvalues() function
@@ -23,19 +23,20 @@ class TestVerification(unittest.TestCase):
     test_create_testvalues_by_nearest_neighbor_no_match(): tests the create_testvalues_by_nearest_neighbor() function without a match    
     """
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        sets up test values for tests
+        sets up test values for whole class
         """
 
-        self.modelvalues_for_testing = (
+        cls.modelvalues_for_testing = (
             {(Feature.M, "x") : 200,
             (Feature.DD, "xy") : 250,
             (Feature.UD, "xy") : 100,
             (Feature.M, "y") : 150},
             {(Feature.UU, "ab") : 200})
 
-        self.testvalues_for_testing = (
+        cls.testvalues_for_testing = (
             {(Feature.M, "x") : [180, 210],
             (Feature.DD, "xy") : [220],
             (Feature.UD, "xy") : [80, 300, 220, 250],
@@ -58,11 +59,11 @@ class TestVerification(unittest.TestCase):
             (Feature.M, "a") : [250, 250],
             (Feature.UD, "xy") : [300, 280, 280, 280]})
 
-        self.samples_for_testing = (
-            Sample("content", 123456, "username1", self.testvalues_for_testing[1]),
-            Sample("content", 123456, "username2", self.testvalues_for_testing[2]),
-            Sample("content", 123456, "username3", self.testvalues_for_testing[3]),
-            Sample("content", 123456, "username4", self.testvalues_for_testing[4]))
+        cls.samples_for_testing = (
+            Sample("content", 123456, "username1", cls.testvalues_for_testing[1]),
+            Sample("content", 123456, "username2", cls.testvalues_for_testing[2]),
+            Sample("content", 123456, "username3", cls.testvalues_for_testing[3]),
+            Sample("content", 123456, "username4", cls.testvalues_for_testing[4]))
 
     def test_calculate_euklidean_distance(self):
         """
@@ -133,8 +134,7 @@ class TestVerification(unittest.TestCase):
 
         modelvalues = self.modelvalues_for_testing[0]
         testvalues = self.testvalues_for_testing[1]
-        ref = []
-        self.assertEqual(v.build_vectors_as_list(modelvalues, testvalues), ref)
+        self.assertEqual(v.build_vectors_as_list(modelvalues, testvalues), [])
 
     def test_create_testvalues_by_nearest_neighbor(self):
         """
@@ -153,8 +153,7 @@ class TestVerification(unittest.TestCase):
 
         model = self.modelvalues_for_testing[1]
         testsample = self.samples_for_testing[0]
-        ref = {}
-        self.assertEqual(v.create_testvalues_by_nearest_neighbor(model, testsample), ref)
+        self.assertEqual(v.create_testvalues_by_nearest_neighbor(model, testsample), {})
     
     def test_verify_per_threshold_multiple_testsamples_not_encrypted(self):
         """

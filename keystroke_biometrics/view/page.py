@@ -15,5 +15,6 @@ class Page(tk.Frame):
         tk.Label (self, text = page_name, font=('Helvetica', 18, "bold")).pack()
         if view_change:
             # add navigation buttons to header
-            tk.Radiobutton(header, text="Recording Samples", indicatoron = 0, width = 20, variable=root.page_number_from_header, command=lambda: root.change_page(0),value=0).grid(row=0, column=1)
-            tk.Radiobutton(header, text="Verification", indicatoron = 0, width = 20, variable=root.page_number_from_header, command=lambda: c.get_all_sample_identifier(root.change_page),value=1).grid(row=0, column=2)
+            tk.Radiobutton(header, text="Recording Samples (free text)", indicatoron = 0, width = 30, variable=root.page_number_from_header, command=lambda: root.change_page(0, False),value=0).grid(row=0, column=1)
+            tk.Radiobutton(header, text="Recording Samples (fixed text)", indicatoron = 0, width = 30, variable=root.page_number_from_header, command=lambda: root.change_page(0, True),value=1).grid(row=0, column=2)
+            tk.Radiobutton(header, text="Verification", indicatoron = 0, width = 30, variable=root.page_number_from_header, command=lambda: c.get_all_sample_identifier(root.change_page),value=2).grid(row=0, column=3)
