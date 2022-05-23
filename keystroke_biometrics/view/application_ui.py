@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from view.recording_page import RecordingPage
+from view.template_text_page import TemplateTextPage
 from view.verification_page import VerificationPage
 from view.recording_results_page import RecordingResultsPage
 from view.verification_results_page import VerificationResultsPage
@@ -13,7 +14,7 @@ class Application (tk.Tk):
     title: title of the application
     state: state of window dimension
     all_page_classes: tuple of all pages included in application
-    page_number_from_header: number of current pagegroup (recording or verification) based on navigation buttons from header
+    page_from_header: name of current page based on navigation buttons from header
     current_page: currently shown page
 
     Methods
@@ -26,27 +27,32 @@ class Application (tk.Tk):
         self.title("Keystroke Biometrics")
         self.state("zoomed")
         # create page tracking for view changes
-        self.all_page_classes = (RecordingPage, VerificationPage, RecordingResultsPage, VerificationResultsPage)
-        self.page_number_from_header = tk.IntVar()
+        self.all_page_classes = {
+            "RecordingPage" : RecordingPage,
+            "TemplateTextPage" : TemplateTextPage,
+            "VerificationPage" : VerificationPage,
+            "RecordingResultsPage" : RecordingResultsPage,
+            "VerificationResultsPage": VerificationResultsPage}
+        self.page_from_header = tk.StringVar()
         # initialize start page
-        self.page_number_from_header.set(0)
-        self.current_page = self.all_page_classes[0](self)
+        self.page_from_header.set("RecordingPage")
+        self.current_page = self.all_page_classes["RecordingPage"](self)
         self.current_page.pack(fill='x')
 
-    def change_page(self, page_number, data = None):
+    def change_page(self, page, data = None):
         """
         changes currently shown page
 
         Parameter:
-        page_number: number of new page
+        page: class name of new page as string
         data: data, which should be transfered to page component
         """
 
         self.current_page.destroy()
         if data is None:
-            self.current_page = self.all_page_classes[page_number](self)
+            self.current_page = self.all_page_classes[page](self)
         else:
-            self.current_page = self.all_page_classes[page_number](self, data)
+            self.current_page = self.all_page_classes[page](self, data)
         self.current_page.pack(fill='x')
 
 def start_application():

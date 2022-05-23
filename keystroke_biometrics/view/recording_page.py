@@ -18,7 +18,7 @@ class RecordingPage(Page):
     input_validation_failed(comparison_failed): displays information about failing input validation
     """
 
-    def __init__(self, root, input_data_fixed_text = False):
+    def __init__(self, root):
         super().__init__(root, "Recording Samples", True)
         # add username entry field + label
         username_frame = tk.Frame(self)

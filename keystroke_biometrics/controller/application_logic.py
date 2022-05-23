@@ -45,16 +45,17 @@ def form_sample_from_entry(content, new_username, callback):
     if len(content) > 0:
         values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(content)
         if not values_for_sample:
-            return callback(2)
+            # show recording results page
+            return callback("RecordingResultsPage")
         global current_sample
         global current_username
         current_username = new_username
         current_sample = Sample(content, inputtime, current_username, values_for_sample)
-        # show page 2 with overview of sample content and values
-        callback (2, current_sample.get_content_and_values_overview())
+        # show recording results page with overview of sample content and values
+        callback ("RecordingResultsPage", current_sample.get_content_and_values_overview())
     else:
         keyboardcapture.stop_recording()
-        callback(2)    
+        callback("RecordingResultsPage")    
 
 def get_all_sample_identifier(callback):
     """
@@ -65,8 +66,8 @@ def get_all_sample_identifier(callback):
     """
 
     all_identifier = fileaccess.read_sample_identifier_from_file()
-    # show page 1 with identifier
-    callback (1, all_identifier)
+    # show verification page with identifier
+    callback ("VerificationPage", all_identifier)
 
 def archive_current_sample(set_text_for_comparison, callback):
     """
@@ -99,8 +100,8 @@ def delete_current_sample(set_text_for_comparison, callback):
     else:
         text_for_comparison = None
     current_sample = None
-    # show page 0
-    callback(0)
+    # show recording page
+    callback("RecordingPage")
 
 def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback):
     """
@@ -141,9 +142,9 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
             rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {rejection_value}%\n"
             index += 1
         results_as_text = f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}"
-        # show page 3 with results as text and chart data
-        callback(3, (results_as_text, x_thresholds, y_acceptance, y_rejection))
+        # show verification results page with results as text and chart data
+        callback("VerificationResultsPage", (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:
-        # show page 3
-        callback(3)
+        # show verification results page
+        callback("VerificationResultsPage")
     
