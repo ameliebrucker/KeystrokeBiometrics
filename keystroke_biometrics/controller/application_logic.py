@@ -44,6 +44,8 @@ def form_sample_from_entry(content, new_username, callback):
 
     if len(content) > 0:
         values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(content)
+        if not values_for_sample:
+            return callback(2)
         global current_sample
         global current_username
         current_username = new_username
