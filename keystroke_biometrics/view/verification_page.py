@@ -10,7 +10,8 @@ class VerificationPage(Page):
     Attributes (Object)
     checked_identifiers: dictionary with identifiers as key and boolean whether they are selected as values
     encryption_check: boolean, indicates whether learnsamples should be treated as encrypted
-    tooltip_frame: label with tip for selection
+    tooltip_frame
+    : label with tip for selection
 
     Methods
     starting_verification(callback): summarizes selected samples and starts verification process

@@ -135,7 +135,7 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifiers)
     testsamples = fileaccess.read_samples_from_files(testsample_identifiers)
     # perform verification process
-    compared_values, results = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
+    compared_values, results, euklidean_distance_dict = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
     if compared_values > 0:
         # samples contained comparable data
         # set thresholds as number between 0 and 1 as list
@@ -144,8 +144,8 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
         y_acceptance = list(results.values())
         y_rejection = []
 
-        acceptance_as_text = "\nAcceptance:\n"
-        rejection_as_text = "\nRejection:\n"
+        acceptance_as_text = "Acceptance:\n\n"
+        rejection_as_text = "Rejection:\n\n"
         index = 0
         for k, v in results.items():
             # fill list of rejection values based on results
@@ -155,7 +155,19 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
             acceptance_as_text += f"{x_thresholds[index]} ({k}ms) - {v}%\n"
             rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {rejection_value}%\n"
             index += 1
-        results_as_text = f"Results\n{acceptance_as_text}{rejection_as_text}\nCompared time values: {compared_values}"
+        # format learnsample identifiers for result text
+        learnsamples_as_text = "Learnsamples:\n\n"
+        index = 1
+        for identifier in learnsample_identifiers:
+            learnsamples_as_text += f"{index}. Learnsample\n\"{identifier}\"\n"
+            index += 1
+        # format euklidean distance per testsample for result text
+        euklidean_distance_as_text = "Normalized euklidean distance:\n\n"
+        index = 1
+        for k, v in euklidean_distance_dict.items():
+            euklidean_distance_as_text += f"{index}. Testsample\n\"{k}\"\nDistance: {v}\n"
+            index += 1
+        results_as_text = f"{acceptance_as_text}\n{rejection_as_text}\n{learnsamples_as_text}\n{euklidean_distance_as_text}\nCompared values in total: {compared_values}"
         # show verification results page with results as text and chart data
         callback("VerificationResultsPage", (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:

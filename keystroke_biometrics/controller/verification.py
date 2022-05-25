@@ -10,34 +10,42 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     encrypted: boolean, indicates whether character values from learnsamples should be treated as encrypted
 
     Return:
-    number of compared values, results as dictionary with thresholds and acceptance rate in %
+    tupel of
+        number of compared values
+        results as dictionary with thresholds and acceptance rate in %
+        dictionary with normalized euklidean distance per testsample identifier
     """
     
     if not testsamples or not learnsamples:
+        # no compared values, no results
         return (0, {})
     modelvalues = create_modelvalues(learnsamples)
     testvalues_per_sample = []
     if encrypted:
         for s in testsamples:
             # replace unknown (encrypted) char values with possible matches by nearest neighbor 
-            testvalues_per_sample.append(create_testvalues_by_nearest_neighbor(modelvalues, s))
+            testvalues_per_sample.append((create_testvalues_by_nearest_neighbor(modelvalues, s), s.get_short_identifier()))
     else:
         for s in testsamples:
-            testvalues_per_sample.append(s.values_per_feature_and_chars)
+            testvalues_per_sample.append((s.values_per_feature_and_chars, s.get_short_identifier()))
     compared_values = 0
     # create results dictionary with key: threshold, value: number of successful verfications
     results = {}
     for th in thresholds:
         results[th] = 0
+    # create eukidean distance dictionary
+    euklidean_distance_dict = {}
     # do verification process for every testsample
-    for testvalues in testvalues_per_sample:
+    for tupel in testvalues_per_sample:
         # form vectors from modelvalues and testvalues
-        vectors = build_vectors_as_list (modelvalues, testvalues)
+        vectors = build_vectors_as_list (modelvalues, tupel[0])
         vector_size = len(vectors)
         if (vector_size > 0):
             # model and testvalues are comparable
             compared_values += vector_size
             euklidean_distance = calculate_euklidean_distance(vectors)
+            # add identifier as key and normalized euklidean distance as value to dictionary
+            euklidean_distance_dict[tupel[1]] = euklidean_distance
             print ("euklidische distance")
             print (euklidean_distance)
             # compare all thresholds with euklidean distance
@@ -48,7 +56,7 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     # calculate acceptance rate in percentage 
     for k, v in results.items():
         results[k] = round(v/len(testsamples) * 100, 2)
-    return (compared_values, results)
+    return (compared_values, results, euklidean_distance_dict)
 
 def create_modelvalues(learnsamples):
     """
