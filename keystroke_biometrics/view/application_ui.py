@@ -1,4 +1,5 @@
 import tkinter as tk
+import ttkbootstrap as ttk
 
 from view.recording_page import RecordingPage
 from view.template_text_page import TemplateTextPage
@@ -6,7 +7,7 @@ from view.verification_page import VerificationPage
 from view.recording_results_page import RecordingResultsPage
 from view.verification_results_page import VerificationResultsPage
 
-class Application (tk.Tk):
+class Application (ttk.tk.Tk):
     """
     A class for representing the application of the user interface
 
@@ -25,7 +26,18 @@ class Application (tk.Tk):
         super().__init__()
         # set title and window dimensions
         self.title("Keystroke Biometrics")
+        self.style = ttk.Style("flatly")
         self.state("zoomed")
+        # set fonts
+        self.font18 = ttk.font.Font(self, family="Microsoft JhengHei UI", size=18)
+        self.font14bold = ttk.font.Font(self, family="Microsoft JhengHei UI", size=14, weight="bold")
+        self.font10 = ttk.font.Font(self, family="Microsoft JhengHei UI", size=10)
+        # set styles
+        self.style.configure("TLabel", font=self.font10)
+        self.style.configure("BorderFrame.TFrame", background=ttk.PRIMARY)
+        # self.style.configure('TFrame', background='green')
+        # self.style.configure("TEntry", font=self.font10)
+        # self.style.configure("TRadiobutton", font=self.font10)
         # create page tracking for view changes
         self.all_page_classes = {
             "RecordingPage" : RecordingPage,
@@ -37,7 +49,7 @@ class Application (tk.Tk):
         # initialize start page
         self.page_from_header.set("RecordingPage")
         self.current_page = self.all_page_classes["RecordingPage"](self)
-        self.current_page.pack(fill='x')
+        self.current_page.pack(fill=ttk.X)
 
     def change_page(self, page, data = None):
         """

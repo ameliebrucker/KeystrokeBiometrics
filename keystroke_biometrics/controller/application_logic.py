@@ -3,19 +3,20 @@ import controller.fileaccess as fileaccess
 import controller.verification as verification
 from model.sample import Sample
 
-text_for_comparison = None
+template_text = ""
 current_username = "Anonym"
 current_sample = None
 # keysymbols for backspace, del, arrow keys (->, <-)
 forbidden_keysyms = ("BackSpace", "Delete", "Right", "Left")
 
-def process_keyboard_input(event, text, callback):
+def process_keyboard_input(event, text, comparison, callback):
     """
     processes event from keyboard input, detects incorrect characters and and reacts to them
 
     Parameter:
     event: keystroke event from typing in text field
     text: text field content at the time of function call
+    comparison: boolean, indicates whether input text should be compared with template text
     callback: callback function after detecting invalid character with parameter whether content comparison failed
     """
 
@@ -23,8 +24,8 @@ def process_keyboard_input(event, text, callback):
         # input contains forbidden characters
         keyboardcapture.stop_recording()
         return callback(False)
-    if text_for_comparison is not None:
-        if text != text_for_comparison[:len(text)]:
+    if comparison:
+        if text != template_text[:len(text)]:
             # input does not match required content
             keyboardcapture.stop_recording()
             return callback(True)
@@ -69,12 +70,12 @@ def get_all_sample_identifier(callback):
     # show verification page with identifier
     callback ("VerificationPage", all_identifier)
 
-def archive_current_sample(set_text_for_comparison, callback):
+def archive_current_sample(set_template_text, callback):
     """
     archives current sample and calls delete_current_sample function
 
     Parameter:
-    set_text_for_comparison: boolean, indicates whether current content should be used as comparison text
+    set_template_text: boolean, indicates whether current content should be used as template text
     callback: callback function for page change to pass on to delete_current_sample function
 
     Precondition:
@@ -82,23 +83,23 @@ def archive_current_sample(set_text_for_comparison, callback):
     """
     
     fileaccess.write_sample_to_file(current_sample)
-    delete_current_sample(set_text_for_comparison, callback)
+    delete_current_sample(set_template_text, callback)
 
-def delete_current_sample(set_text_for_comparison, callback):
+def delete_current_sample(set_template_text, callback):
     """
     prepares new input by removing old data (current sample) from intermediate storage
 
     Parameter:
-    set_text_for_comparison: boolean, indicating whether current content should be used as comparison text
+    set_template_text: boolean, indicating whether current content should be used as template text
     callback: callback function for page change after deleting current sample
     """
     
     global current_sample
-    global text_for_comparison
-    if set_text_for_comparison:
-        text_for_comparison = current_sample.content
+    global template_text
+    if set_template_text:
+        template_text = current_sample.content
     else:
-        text_for_comparison = None
+        template_text = None
     current_sample = None
     # show recording page
     callback("RecordingPage")

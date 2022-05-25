@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
+# from ttkbootstrap.scrolled import ScrolledText
 from view.page import Page
 import controller.application_logic as c
 
@@ -23,7 +24,7 @@ class RecordingResultsPage(Page):
         result_text_box.pack()
         # add checkbox for keeping content as reference for next entries
         reference_entry_check = tk.BooleanVar(value = False)
-        if c.text_for_comparison is not None and state_save_button is not tk.DISABLED:
+        if c.template_text is not None and state_save_button is not tk.DISABLED:
             # keep possible previous reference content per default
             reference_entry_check.set(True)
         checkbox_reference_entry = tk.Checkbutton(self, text="Keep this text as validation reference for next entry", state=state_save_button, variable=reference_entry_check, onvalue=True, offvalue=False)
