@@ -33,30 +33,48 @@ def process_keyboard_input(event, text, comparison, callback):
     keyboardcapture.record_keyboard_entries(event)
 
 
-def form_sample_from_entry(content, new_username, callback):
+def form_sample_from_entry(content, new_username, fixed_text_recording, callback):
     """
     creates new sample from collected data and terminates current input
 
     Parameter:
     content: text field content at the time of function call
     new_username: username specified by the user for the current entry
+    fixed_text_recording: boolean, indicates whether sample comes from fixed text recording page
     callback: callback function for page change after sample creation 
     """
 
-    if len(content) > 0:
+    # if recording was with fixed text, check if content length matches template text length
+    if len(content) > 0 and (not fixed_text_recording or len(content) is len(template_text)):
         values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(content)
         if not values_for_sample:
             # show recording results page
-            return callback("RecordingResultsPage")
+            return callback("RecordingResultsPage", (fixed_text_recording, None))
         global current_sample
         global current_username
         current_username = new_username
         current_sample = Sample(content, inputtime, current_username, values_for_sample)
         # show recording results page with overview of sample content and values
-        callback ("RecordingResultsPage", current_sample.get_content_and_values_overview())
+        callback ("RecordingResultsPage", (fixed_text_recording, current_sample.get_content_and_values_overview()))
     else:
         keyboardcapture.stop_recording()
-        callback("RecordingResultsPage")    
+        callback("RecordingResultsPage", (fixed_text_recording, None))    
+
+def set_template_text(text, callback):
+    """
+    processes event from keyboard input, detects incorrect characters and and reacts to them
+
+    Parameter:
+    text: text for template text
+    callback: callback function after setting template text
+    """
+
+    global template_text
+    # remove \n since it is reserved for finishing the entry
+    template_text = text.replace("\n","")
+    # show recording page with template text
+    callback("RecordingPage", True)
+    
 
 def get_all_sample_identifier(callback):
     """
@@ -70,12 +88,12 @@ def get_all_sample_identifier(callback):
     # show verification page with identifier
     callback ("VerificationPage", all_identifier)
 
-def archive_current_sample(set_template_text, callback):
+def archive_current_sample(navigate_to_fixed_text_recording, callback):
     """
     archives current sample and calls delete_current_sample function
 
     Parameter:
-    set_template_text: boolean, indicates whether current content should be used as template text
+    navigate_to_fixed_text_recording: boolean, indicates whether callback should navigate to fixed text recording page
     callback: callback function for page change to pass on to delete_current_sample function
 
     Precondition:
@@ -83,26 +101,21 @@ def archive_current_sample(set_template_text, callback):
     """
     
     fileaccess.write_sample_to_file(current_sample)
-    delete_current_sample(set_template_text, callback)
+    delete_current_sample(navigate_to_fixed_text_recording, callback)
 
-def delete_current_sample(set_template_text, callback):
+def delete_current_sample(navigate_to_fixed_text_recording, callback):
     """
     prepares new input by removing old data (current sample) from intermediate storage
 
     Parameter:
-    set_template_text: boolean, indicating whether current content should be used as template text
+    navigate_to_fixed_text_recording: boolean, indicates whether callback should navigate to fixed text recording page
     callback: callback function for page change after deleting current sample
     """
     
     global current_sample
-    global template_text
-    if set_template_text:
-        template_text = current_sample.content
-    else:
-        template_text = None
     current_sample = None
-    # show recording page
-    callback("RecordingPage")
+    # show recording page with or without fixed text
+    callback("RecordingPage", navigate_to_fixed_text_recording)
 
 def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback):
     """

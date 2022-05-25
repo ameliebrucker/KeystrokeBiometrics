@@ -9,9 +9,9 @@ class RecordingResultsPage(Page):
     A class for representing the recording results page of the user interface
     """
 
-    def __init__(self, root, input_data_content_and_values = None):
+    def __init__(self, root, fixed_text_and_results):
         super().__init__(root, "Recording Results")
-        results = input_data_content_and_values
+        fixed_text, results = fixed_text_and_results
         state_save_button = tk.NORMAL
         if results is None:
             results = "No values recorded."
@@ -32,5 +32,5 @@ class RecordingResultsPage(Page):
         # add button group for save / delete
         button_group = tk.Frame(self)
         button_group.pack()
-        tk.Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=0)
-        tk.Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(reference_entry_check.get(), root.change_page)).grid(row=0, column=1)
+        tk.Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(fixed_text, root.change_page)).grid(row=0, column=0)
+        tk.Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(fixed_text, root.change_page)).grid(row=0, column=1)

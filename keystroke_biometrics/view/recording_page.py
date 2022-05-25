@@ -20,10 +20,10 @@ class RecordingPage(Page):
     input_validation_failed(comparison_failed): displays information about failing input validation
     """
 
-    def __init__(self, root, input_data_fixed_text = False):
+    def __init__(self, root, fixed_text = False):
         # set default title
         title = "Recording (free text)"
-        if input_data_fixed_text:
+        if fixed_text:
             # change title for fixed text
             title = "Recording (fixed text)"
         super().__init__(root, title, True)
@@ -40,29 +40,29 @@ class RecordingPage(Page):
         # add instructions
         ttk.Label(mainframe, text="Type your text", font=root.font14bold).pack(anchor = ttk.W)
         ttk.Label(mainframe, text="Your keystrokes will be recorded. Finish by pressing the enter key.").pack(anchor = ttk.W)
-        if input_data_fixed_text:
+        if fixed_text:
             # add label and button for required text 
             required_text_header = ttk.Frame(mainframe, bootstyle="primary")
             required_text_header.pack(expand=True, fill=ttk.X, pady=(5, 0))
             # configure spacing for columns
             required_text_header.grid_columnconfigure(1, weight=1)
             ttk.Label (required_text_header, text="Required text input", bootstyle="inverse-primary").grid(row=0, column=0, sticky=ttk.W, padx=5)
-            ttk.Button(required_text_header, text="Change template text", command=lambda:root.change_page("TemplateTextPage"), bootstyle="outline").grid(row=0, column=1, sticky=ttk.E)
+            ttk.Button(required_text_header, text="Change template text", command=lambda:root.change_page("TemplateTextPage"), bootstyle=ttk.OUTLINE).grid(row=0, column=1, sticky=ttk.E)
             # add border frame for required text 
             self.required_text_border = ttk.Frame(mainframe, bootstyle="primary")
             self.required_text_border.pack(fill=ttk.X, pady=(0, 5))
             # add scrollable widget for required text 
-            required_text_box = ScrolledText(self.required_text_border, height=2)
+            required_text_box = ScrolledText(self.required_text_border, height=3)
             required_text_box.pack(fill=ttk.X, padx=1, pady=1)
             required_text_box.insert(ttk.INSERT, c.template_text)
             required_text_box.configure(state=ttk.DISABLED)            
         # add textbox for keystroke recognition
         self.input_textbox = ttk.Text(mainframe, height=12)
         self.input_textbox.focus_set()
-        self.input_textbox.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), input_data_fixed_text, self.input_validation_failed))
-        self.input_textbox.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), input_data_fixed_text, self.input_validation_failed))
+        self.input_textbox.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
+        self.input_textbox.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
         # set return key as input exit
-        self.input_textbox.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_textbox.get(1.0, "end-1c"), username.get(), root.change_page))
+        self.input_textbox.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_textbox.get(1.0, "end-1c"), username.get(), fixed_text, root.change_page))
         # prevent user from changing cursor position
         self.input_textbox.bind("<Button>", lambda e: self.set_cursor_to_end())
         self.input_textbox.pack(expand=True, fill=ttk.X)

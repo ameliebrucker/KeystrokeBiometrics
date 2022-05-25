@@ -16,10 +16,10 @@ class VerificationPage(Page):
     starting_verification(callback): summarizes selected samples and starts verification process
     """
 
-    def __init__(self, root, input_data_identifier):
+    def __init__(self, root, identifier):
         super().__init__(root, "Verification", True)
-        # create dict from input_data_identifier with default selection False
-        self.checked_identifiers = {input_data_identifier[i]: (tk.BooleanVar(value=False), tk.BooleanVar(value=False)) for i in range(0, len(input_data_identifier), 1)}
+        # create dict from identifier with default selection False
+        self.checked_identifiers = {identifier[i]: (tk.BooleanVar(value=False), tk.BooleanVar(value=False)) for i in range(0, len(identifier), 1)}
         # add overview for samples
         sample_selection = tk.Frame(self)
         sample_selection.pack()

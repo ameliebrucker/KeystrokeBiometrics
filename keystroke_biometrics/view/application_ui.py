@@ -34,7 +34,7 @@ class Application (ttk.tk.Tk):
         self.font10 = ttk.font.Font(self, family="Microsoft JhengHei UI", size=10)
         # set styles
         self.style.configure("TLabel", font=self.font10)
-        self.style.configure("BorderFrame.TFrame", background=ttk.PRIMARY)
+        # self.style.configure("BorderFrame.TFrame", background=ttk.PRIMARY)
         # self.style.configure('TFrame', background='green')
         # self.style.configure("TEntry", font=self.font10)
         # self.style.configure("TRadiobutton", font=self.font10)

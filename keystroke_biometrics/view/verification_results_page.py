@@ -11,13 +11,13 @@ class VerificationResultsPage(Page):
     A class for representing the verification results page of the user interface
     """
 
-    def __init__(self, root, input_data_verification = None):
+    def __init__(self, root, verification_results = None):
         super().__init__(root, "Verification Results")
-        if input_data_verification is None:
+        if verification_results is None:
             # samples were not comparable
             tk.Label(self, text="The selected samples do not contain comparable data. Choose samples that match in some characters.").pack()
         else:
-            results_as_text, x_thresholds, y_acceptance, y_rejection = input_data_verification
+            results_as_text, x_thresholds, y_acceptance, y_rejection = verification_results
             # add textfield for displaying results
             result_text_box = ScrolledText(self, height=30, width=105)
             result_text_box.configure(state ='disabled')

@@ -1,4 +1,4 @@
-import tkinter as tk
+import ttkbootstrap as ttk
 from view.page import Page
 import controller.application_logic as c
 
@@ -12,13 +12,16 @@ class TemplateTextPage(Page):
     """
 
     def __init__(self, root):
-        super().__init__(root, "Set Template Text", True)
-        # add textbox for keystroke recognition
-        self.input_textbox = tk.Text(self, height=12, width=80)
-        if c.template_text is not None:
-            # add tip on required text
-            self.required_text_tip = tk.Label (self, text=f"Required text input: \"{c.template_text}\"")
-            self.required_text_tip.pack()
-        # add tooltip on how to type properly
-        self.tooltip = tk.Label (self, text = "Please type your sample text as fluent as possible in the box above. Avoid deleting characters or changing the cursor position. Finish your entry by pressing the enter key.")
-        self.tooltip.pack()
+        super().__init__(root, "Recording (fixed text)", True)
+        mainframe = ttk.Frame(self)
+        mainframe.pack(pady=(15, 0))
+        # add instructions
+        ttk.Label(mainframe, text="Enter your template text", font=root.font14bold).pack(anchor = ttk.W)
+        ttk.Label(mainframe, text="You can also paste a copied text. For the template text no keystrokes will be recorded.").pack(anchor = ttk.W)
+        # add textbox for sample text
+        template_textbox = ttk.Text(mainframe, height=12, width=100)
+        template_textbox.insert(ttk.INSERT, c.template_text)
+        template_textbox.focus_set()
+        template_textbox.pack()
+        # add button for saving
+        ttk.Button(mainframe, text="Set template text", command=lambda:c.set_template_text(template_textbox.get(1.0, ttk.END), root.change_page), bootstyle=ttk.PRIMARY).pack()
