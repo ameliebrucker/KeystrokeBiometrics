@@ -35,6 +35,7 @@ class Application (ttk.tk.Tk):
         # set styles
         self.style.configure("TLabel", font=self.font10)
         self.style.configure("SubmitButton.TButton", font=self.font10)
+        self.style.configure("LargeCheckbutton.TCheckbutton", font=self.font10)
         # self.style.configure("BorderFrame.TFrame", background=ttk.PRIMARY)
         # self.style.configure('TFrame', background='green')
         # self.style.configure("TEntry", font=self.font10)

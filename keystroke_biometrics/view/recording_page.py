@@ -45,7 +45,7 @@ class RecordingPage(Page):
             required_text_header.pack(expand=True, fill=ttk.X, pady=(5, 0))
             # configure spacing for columns
             required_text_header.grid_columnconfigure(1, weight=1)
-            ttk.Label (required_text_header, text="Required text input", bootstyle="inverse-primary").grid(row=0, column=0, sticky=ttk.W, padx=5)
+            ttk.Label (required_text_header, text="Required text input:", bootstyle="inverse-primary").grid(row=0, column=0, sticky=ttk.W, padx=5)
             ttk.Button(required_text_header, text="Change template text", command=lambda:root.change_page("TemplateTextPage"), bootstyle=ttk.OUTLINE).grid(row=0, column=1, sticky=ttk.E)
             # add border frame for required text 
             self.required_text_border = ttk.Frame(mainframe, bootstyle="primary")
@@ -68,7 +68,7 @@ class RecordingPage(Page):
         # add tooltip on how to type properly
         self.tooltip_frame = ttk.Frame (mainframe)
         self.tooltip_frame.pack()
-        tooltip_border = ttk.Labelframe(self.tooltip_frame, bootstyle="danger", text=" ! ")
+        tooltip_border = ttk.Labelframe(self.tooltip_frame, bootstyle=ttk.DANGER, text=" ! ")
         tooltip_border.pack(pady=(0, 2))
         tooltip = ttk.Label (tooltip_border, text = "Do not delete characters, paste a copied text or change the cursors position while entering your text.", foreground="red")
         tooltip.pack()
@@ -85,15 +85,15 @@ class RecordingPage(Page):
     
     def limit_username_length(self, event):
         """
-        limits username to 30 characters
+        limits username to 20 characters
 
         Parameter:
         event: keystroke event which triggered function
         """
 
-        if len(self.username_entry.get()) > 29:
+        if len(self.username_entry.get()) > 19:
             # delete last char
-            self.username_entry.delete(29, ttk.END)
+            self.username_entry.delete(19, ttk.END)
 
     def input_validation_failed(self, comparison_failed):
         """
@@ -106,7 +106,7 @@ class RecordingPage(Page):
         # delete corrupted content completely
         self.input_textbox.delete("1.0", ttk.END)
         if comparison_failed:
-            self.required_text_border.config(bootstyle=ttk.DANGER)
+            self.required_text_border.configure(bootstyle=ttk.DANGER)
         else:
             self.tooltip_frame.configure(bootstyle=ttk.DANGER)
             

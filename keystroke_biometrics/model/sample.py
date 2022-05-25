@@ -33,7 +33,7 @@ class Sample():
         content, inputtime and username are initialized
         """
 
-        maxlength = 60
+        maxlength = 50
         # create time in format dd.mm.yyyy, hh:mm:ss
         formatted_inputtime = datetime.fromtimestamp(self.inputtime/1000.0).strftime("%d.%m.%Y, %H:%M:%S")
         identifier = f"{self.username} ({formatted_inputtime}) "

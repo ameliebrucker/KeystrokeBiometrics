@@ -18,12 +18,12 @@ class RecordingResultsPage(Page):
             # disable save button and checkbox for reference entry
             state_save_button = ttk.DISABLED
         # add textfield for displaying entered content and recorded value
-        result_text_box = ScrolledText(self, height=16, width=100, wrap=ttk.WORD)
+        result_text_box = ScrolledText(self, height=20, width=100, wrap=ttk.WORD)
         result_text_box.insert(ttk.INSERT, results)
         result_text_box.configure(state = ttk.DISABLED)
         result_text_box.pack(pady=(15, 0))
         # add button group for save / delete
         button_group = ttk.Frame(self)
         button_group.pack(pady=(15, 0))
-        ttk.Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=0, padx=2)
-        ttk.Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=1, padx=2)
+        ttk.Button(button_group, text='Delete this sample', command=lambda: c.delete_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=0, padx=2)
+        ttk.Button(button_group, text='Save this sample', state=state_save_button, command=lambda: c.archive_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=1, padx=2)
