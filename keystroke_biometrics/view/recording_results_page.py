@@ -1,4 +1,4 @@
-import tkinter as tk
+import ttkbootstrap as ttk
 from tkinter.scrolledtext import ScrolledText
 # from ttkbootstrap.scrolled import ScrolledText
 from view.page import Page
@@ -12,25 +12,18 @@ class RecordingResultsPage(Page):
     def __init__(self, root, fixed_text_and_results):
         super().__init__(root, "Recording Results")
         fixed_text, results = fixed_text_and_results
-        state_save_button = tk.NORMAL
+        state_save_button = ttk.NORMAL
         if results is None:
             results = "No values recorded."
             # disable save button and checkbox for reference entry
-            state_save_button = tk.DISABLED
+            state_save_button = ttk.DISABLED
         # add textfield for displaying entered content and recorded value
-        result_text_box = ScrolledText(self, height=12, width=80)
-        result_text_box.insert(tk.INSERT, results)
-        result_text_box.configure(state = tk.DISABLED)
-        result_text_box.pack()
-        # add checkbox for keeping content as reference for next entries
-        reference_entry_check = tk.BooleanVar(value = False)
-        if c.template_text is not None and state_save_button is not tk.DISABLED:
-            # keep possible previous reference content per default
-            reference_entry_check.set(True)
-        checkbox_reference_entry = tk.Checkbutton(self, text="Keep this text as validation reference for next entry", state=state_save_button, variable=reference_entry_check, onvalue=True, offvalue=False)
-        checkbox_reference_entry.pack()
+        result_text_box = ScrolledText(self, height=16, width=100, wrap=ttk.WORD)
+        result_text_box.insert(ttk.INSERT, results)
+        result_text_box.configure(state = ttk.DISABLED)
+        result_text_box.pack(pady=(15, 0))
         # add button group for save / delete
-        button_group = tk.Frame(self)
-        button_group.pack()
-        tk.Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(fixed_text, root.change_page)).grid(row=0, column=0)
-        tk.Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(fixed_text, root.change_page)).grid(row=0, column=1)
+        button_group = ttk.Frame(self)
+        button_group.pack(pady=(15, 0))
+        ttk.Button(button_group, text='Delete this record', command=lambda: c.delete_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=0, padx=2)
+        ttk.Button(button_group, text='Save this record', state=state_save_button, command=lambda: c.archive_current_sample(fixed_text, root.change_page), bootstyle=ttk.PRIMARY, style="SubmitButton.TButton").grid(row=0, column=1, padx=2)

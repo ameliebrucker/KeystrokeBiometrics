@@ -12,7 +12,6 @@ class RecordingPage(Page):
     input_textbox: textbox in which keystrokes are recorded
     required_text_border: frame for border around required text
     tooltip_frame: frame with tip on how to type
-    tooltip_highlighted: label with highlighted version of tip on how to type
 
     Methods
     set_cursor_to_end(): sets cursor to the end of input_textbox
@@ -57,7 +56,7 @@ class RecordingPage(Page):
             required_text_box.insert(ttk.INSERT, c.template_text)
             required_text_box.configure(state=ttk.DISABLED)            
         # add textbox for keystroke recognition
-        self.input_textbox = ttk.Text(mainframe, height=12)
+        self.input_textbox = ttk.Text(mainframe, height=12, wrap=ttk.WORD)
         self.input_textbox.focus_set()
         self.input_textbox.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
         self.input_textbox.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
@@ -67,11 +66,12 @@ class RecordingPage(Page):
         self.input_textbox.bind("<Button>", lambda e: self.set_cursor_to_end())
         self.input_textbox.pack(expand=True, fill=ttk.X)
         # add tooltip on how to type properly
-        self.tooltip_frame = ttk.Labelframe(mainframe, bootstyle="danger", text=" ! ")
+        self.tooltip_frame = ttk.Frame (mainframe)
         self.tooltip_frame.pack()
-        tooltip = ttk.Label (self.tooltip_frame, text = "Do not delete characters, paste a copied text or change the cursors position while entering your text.", foreground="red")
+        tooltip_border = ttk.Labelframe(self.tooltip_frame, bootstyle="danger", text=" ! ")
+        tooltip_border.pack(pady=(0, 2))
+        tooltip = ttk.Label (tooltip_border, text = "Do not delete characters, paste a copied text or change the cursors position while entering your text.", foreground="red")
         tooltip.pack()
-        self.tooltip_highlighted = ttk.Label (mainframe, text = "Do not delete characters, paste a copied text or change the cursors position while entering your text.", bootstyle="inverse-danger")
 
     def set_cursor_to_end(self):
         """
@@ -106,11 +106,8 @@ class RecordingPage(Page):
         # delete corrupted content completely
         self.input_textbox.delete("1.0", ttk.END)
         if comparison_failed:
-            self.required_text_border.config(bootstyle="danger")
+            self.required_text_border.config(bootstyle=ttk.DANGER)
         else:
-            self.tooltip_frame.pack_forget()
-            self.tooltip_highlighted.pack_forget()
-            self.tooltip_highlighted.pack(pady=5)
-            
+            self.tooltip_frame.configure(bootstyle=ttk.DANGER)
             
         

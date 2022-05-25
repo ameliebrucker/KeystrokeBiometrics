@@ -55,7 +55,12 @@ class Sample():
         content and values_per_feature_and_chars are initialized
         """
 
-        return f"{self.content}\n\n\nRecorded values in ms: {self.values_per_feature_and_chars}"    
+        results = ""
+        for feature_chars, values in self.values_per_feature_and_chars.items():
+            results += f"\n{feature_chars[0]} (\'{feature_chars[1]}\'): "
+            for value in values:
+                results += f"{value}ms "
+        return f"{self.content}\n\n\nRecorded values in milliseconds:\n{results}"    
         
 
     def get_file_name(self):
