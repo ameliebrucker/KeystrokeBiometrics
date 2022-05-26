@@ -31,7 +31,6 @@ class RecordingPage(Page):
         username_frame = ttk.Frame(mainframe)
         username_frame.pack(anchor = ttk.E)
         ttk.Label(username_frame, text="Username: ").grid(row=0)
-        print(c.current_username)
         username = ttk.StringVar(value=c.current_username)
         # limit username length by register validation function
         limit_length_command = (root.register(self.limit_username_length), '%P')
