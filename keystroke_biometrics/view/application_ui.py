@@ -13,13 +13,14 @@ class Application (ttk.tk.Tk):
 
     Attributes (Object)
     title: title of the application
+    style: style object with style aspects for application
     state: state of window dimension
     all_page_classes: tuple of all pages included in application
     page_from_header: name of current page based on navigation buttons from header
     current_page: currently shown page
 
     Methods
-    change_page(self, page_number, data): changes currently shown page
+    change_page(self, page, data): changes currently shown page
     """
 
     def __init__(self):
@@ -34,12 +35,11 @@ class Application (ttk.tk.Tk):
         self.font10 = ttk.font.Font(self, family="Microsoft JhengHei UI", size=10)
         # set styles
         self.style.configure("TLabel", font=self.font10)
+        self.style.configure("Headline.TLabel", font=self.font18)
+        self.style.configure("MediumHeadline.TLabel", font=self.font14bold)
         self.style.configure("SubmitButton.TButton", font=self.font10)
         self.style.configure("LargeCheckbutton.TCheckbutton", font=self.font10)
-        # self.style.configure("BorderFrame.TFrame", background=ttk.PRIMARY)
-        # self.style.configure('TFrame', background='green')
-        # self.style.configure("TEntry", font=self.font10)
-        # self.style.configure("TRadiobutton", font=self.font10)
+        self.style.configure("TooltipLabel.TLabel", foreground="red", font=self.font10)
         # create page tracking for view changes
         self.all_page_classes = {
             "RecordingPage" : RecordingPage,

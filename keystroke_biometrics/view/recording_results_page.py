@@ -1,6 +1,5 @@
 import ttkbootstrap as ttk
 from tkinter.scrolledtext import ScrolledText
-# from ttkbootstrap.scrolled import ScrolledText
 from view.page import Page
 import controller.application_logic as c
 
@@ -14,7 +13,7 @@ class RecordingResultsPage(Page):
         fixed_text, results = fixed_text_and_results
         state_save_button = ttk.NORMAL
         if results is None:
-            results = "No values recorded."
+            results = "No values recorded.\n\nThe input was empty, shorter than the template text or no time values could be evaluated."
             # disable save button and checkbox for reference entry
             state_save_button = ttk.DISABLED
         # add textfield for displaying entered content and recorded value

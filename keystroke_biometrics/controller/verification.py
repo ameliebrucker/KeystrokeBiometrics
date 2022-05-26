@@ -46,8 +46,6 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
             euklidean_distance = calculate_euklidean_distance(vectors)
             # add identifier as key and normalized euklidean distance as value to dictionary
             euklidean_distance_dict[tupel[1]] = euklidean_distance
-            print ("euklidische distance")
-            print (euklidean_distance)
             # compare all thresholds with euklidean distance
             for k, v in results.items():
                 if euklidean_distance <= k:

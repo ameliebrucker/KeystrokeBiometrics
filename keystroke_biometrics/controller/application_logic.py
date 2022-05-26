@@ -11,7 +11,7 @@ forbidden_keysyms = ("BackSpace", "Delete", "Right", "Left")
 
 def process_keyboard_input(event, text, comparison, callback):
     """
-    processes event from keyboard input, detects incorrect characters and and reacts to them
+    processes event from keyboard input, detects incorrect characters and reacts to them
 
     Parameter:
     event: keystroke event from typing in text field
@@ -33,13 +33,12 @@ def process_keyboard_input(event, text, comparison, callback):
     keyboardcapture.record_keyboard_entries(event)
 
 
-def form_sample_from_entry(content, new_username, fixed_text_recording, callback):
+def form_sample_from_entry(content, fixed_text_recording, callback):
     """
     creates new sample from collected data and terminates current input
 
     Parameter:
     content: text field content at the time of function call
-    new_username: username specified by the user for the current entry
     fixed_text_recording: boolean, indicates whether sample comes from fixed text recording page
     callback: callback function for page change after sample creation 
     """
@@ -48,21 +47,20 @@ def form_sample_from_entry(content, new_username, fixed_text_recording, callback
     if len(content) > 0 and (not fixed_text_recording or len(content) is len(template_text)):
         values_for_sample, inputtime = keyboardcapture.extract_values_per_feature_and_chars(content)
         if not values_for_sample:
-            # show recording results page
+            # no recorded values, show recording results page
             return callback("RecordingResultsPage", (fixed_text_recording, None))
         global current_sample
-        global current_username
-        current_username = new_username
         current_sample = Sample(content, inputtime, current_username, values_for_sample)
         # show recording results page with overview of sample content and values
         callback ("RecordingResultsPage", (fixed_text_recording, current_sample.get_content_and_values_overview()))
     else:
         keyboardcapture.stop_recording()
+        # show recording results page
         callback("RecordingResultsPage", (fixed_text_recording, None))    
 
 def set_template_text(text, callback):
     """
-    processes event from keyboard input, detects incorrect characters and and reacts to them
+    sets given text as template text
 
     Parameter:
     text: text for template text
@@ -70,10 +68,21 @@ def set_template_text(text, callback):
     """
 
     global template_text
-    # remove \n since it is reserved for finishing the entry
+    # remove \n since it is reserved for finishing entries
     template_text = text.replace("\n","")
     # show recording page with template text
     callback("RecordingPage", True)
+
+def set_username(username):
+    """
+    sets username
+
+    Parameter:
+    username: name to be set as username
+    """
+
+    global current_username
+    current_username = username
     
 
 def get_all_sample_identifier(callback):
@@ -81,20 +90,20 @@ def get_all_sample_identifier(callback):
     retrieves identifiers for archived samples
 
     Parameter:
-    callback: callback function for showing new page with all identifiers
+    callback: callback function for showing page with all identifiers
     """
 
-    all_identifier = fileaccess.read_sample_identifier_from_file()
-    # show verification page with identifier
-    callback ("VerificationPage", all_identifier)
+    all_identifiers = fileaccess.read_sample_identifier_from_file()
+    # show verification page with identifiers
+    callback ("VerificationPage", all_identifiers)
 
 def archive_current_sample(navigate_to_fixed_text_recording, callback):
     """
-    archives current sample and calls delete_current_sample function
+    archives current sample and calls delete_current_sample() function
 
     Parameter:
     navigate_to_fixed_text_recording: boolean, indicates whether callback should navigate to fixed text recording page
-    callback: callback function for page change to pass on to delete_current_sample function
+    callback: callback function for page change to pass on to delete_current_sample() function
 
     Precondition:
     current_sample is not None (form_sample_from_entry() has been executed)
@@ -143,34 +152,36 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
         # set acceptance and rejection values as list
         y_acceptance = list(results.values())
         y_rejection = []
-
-        acceptance_as_text = "Acceptance:\n\n"
-        rejection_as_text = "Rejection:\n\n"
+        # form results as text
+        acceptance_text = "Acceptance:\n\n"
+        rejection_text = "Rejection:\n\n"
+        learnsamples_text = "Learnsamples:\n\n"
+        euklidean_distance_text = "Normalized euklidean distance:\n\n"
+        # process percentage results of verification
         index = 0
         for k, v in results.items():
             # fill list of rejection values based on results
             rejection_value = round(100 - v, 2)
             y_rejection.append(rejection_value)
-            # append acceptance and rejection values to text
-            acceptance_as_text += f"{x_thresholds[index]} ({k}ms) - {v}%\n"
-            rejection_as_text += f"{x_thresholds[index]} ({k}ms) - {rejection_value}%\n"
+            # append formatted acceptance and rejection values to text
+            acceptance_text += f"{x_thresholds[index]:.1f} ({k:03} ms) - {v} %\n"
+            rejection_text += f"{x_thresholds[index]:.1f} ({k:03} ms) - {rejection_value} %\n"
             index += 1
-        # format learnsample identifiers for result text
-        learnsamples_as_text = "Learnsamples:\n\n"
+        # append formatted learnsample identifiers to text
         index = 1
         for identifier in learnsample_identifiers:
-            learnsamples_as_text += f"{index}. Learnsample\n\"{identifier}\"\n"
+            learnsamples_text += f"{index}. Learnsample\n\"{identifier}\"\n"
             index += 1
-        # format euklidean distance per testsample for result text
-        euklidean_distance_as_text = "Normalized euklidean distance:\n\n"
+        # append formatted euklidean distance per testsample to text
         index = 1
         for k, v in euklidean_distance_dict.items():
-            euklidean_distance_as_text += f"{index}. Testsample\n\"{k}\"\nDistance: {v}\n"
+            euklidean_distance_text += f"{index}. Testsample\n\"{k}\"\nDistance: {v:.4f}\n"
             index += 1
-        results_as_text = f"{acceptance_as_text}\n{rejection_as_text}\n{learnsamples_as_text}\n{euklidean_distance_as_text}\nCompared values in total: {compared_values}"
+        # form result substrings to total results text
+        results_as_text = f"{acceptance_text}\n{rejection_text}\n{learnsamples_text}\n{euklidean_distance_text}\nCompared values in total: {compared_values}"
         # show verification results page with results as text and chart data
         callback("VerificationResultsPage", (results_as_text, x_thresholds, y_acceptance, y_rejection))
     else:
-        # show verification results page
+        # show verification results page without results
         callback("VerificationResultsPage")
     

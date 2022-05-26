@@ -10,8 +10,7 @@ class VerificationPage(Page):
     Attributes (Object)
     checked_identifiers: dictionary with identifiers as key and boolean whether they are selected as values
     encryption_check: boolean, indicates whether learnsamples should be treated as encrypted
-    tooltip_frame
-    : label with tip for selection
+    tooltip_frame: frame with tip on how to type
 
     Methods
     starting_verification(callback): summarizes selected samples and starts verification process
@@ -23,31 +22,30 @@ class VerificationPage(Page):
         if not identifier:
             mainframe.pack(pady=(15, 0))
             # add instructions
-            ttk.Label(mainframe, text="No samples", font=root.font14bold).pack(anchor = ttk.W, pady=(0, 8))
+            ttk.Label(mainframe, text="No samples", style="MediumHeadline.TLabel").pack(anchor = ttk.W, pady=(0, 8))
             ttk.Label(mainframe, text="How do I add samples?").pack(anchor = ttk.W)
             ttk.Label(mainframe, text="1. Navigate to the \"Recording samples\" page (free or fixed text - it's your choice)").pack(anchor = ttk.W)
-            ttk.Label(mainframe, text="2. Type your text in the input field, finish by pressing the enter key").pack(anchor = ttk.W)
+            ttk.Label(mainframe, text="2. Follow the instructions. Type your text in the input field, finish by pressing the enter key").pack(anchor = ttk.W)
             ttk.Label(mainframe, text="3. On the recording results page, press the \"Save this sample\" button").pack(anchor = ttk.W)
             ttk.Label(mainframe, text="4. Return to this page").pack(anchor = ttk.W)
         else:
             mainframe.pack()
-            # add instruction
-            ttk.Label(mainframe, text="Select samples", font=root.font14bold).pack(anchor = ttk.W)
-            # create dict from identifier with default selection False
+            ttk.Label(mainframe, text="Select samples", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
+            # create dictionary from identifiers with default selection False
             self.checked_identifiers = {identifier[i]: (ttk.BooleanVar(value=False), ttk.BooleanVar(value=False)) for i in range(0, len(identifier), 1)}
             sample_selection = ttk.Frame(mainframe)
             sample_selection.pack()
             # add learnsample overview
             learnsample_frame = ttk.Frame(sample_selection)
             learnsample_frame.pack(side=ttk.LEFT, padx=(0, 2))
-            ttk.Label(learnsample_frame, text="Learnsamples for verification process", font=root.font10).pack(anchor=ttk.W)
+            ttk.Label(learnsample_frame, text="Learnsamples for verification process").pack(anchor=ttk.W)
             learnsamples_overview = ScrolledText (learnsample_frame, cursor='arrow', height=15, width=68)
             learnsamples_overview.configure(state = ttk.DISABLED)
             learnsamples_overview.pack()
             # add testsample overview
             testsample_frame = ttk.Frame(sample_selection)
             testsample_frame.pack(side=ttk.RIGHT, padx=(2, 0))
-            ttk.Label(testsample_frame, text="Testsamples for verification process", font=root.font10).pack(anchor=ttk.W)
+            ttk.Label(testsample_frame, text="Testsamples for verification process").pack(anchor=ttk.W)
             testsamples_overview = ScrolledText (testsample_frame, cursor='arrow', height=15, width=68)
             testsamples_overview.configure(state = ttk.DISABLED)
             testsamples_overview.pack()
@@ -60,7 +58,7 @@ class VerificationPage(Page):
             self.tooltip_frame.pack(anchor=ttk.E)
             tooltip_border = ttk.Labelframe(self.tooltip_frame, bootstyle=ttk.DANGER, text=" ! ")
             tooltip_border.pack(pady=(0, 2))
-            tooltip = ttk.Label (tooltip_border, text = "Choose at least one sample per group.", foreground="red")
+            tooltip = ttk.Label (tooltip_border, text = "Choose at least one sample per group.", style="TooltipLabel.TLabel")
             tooltip.pack()
             submit_frame = ttk.Frame(mainframe)
             submit_frame.pack()

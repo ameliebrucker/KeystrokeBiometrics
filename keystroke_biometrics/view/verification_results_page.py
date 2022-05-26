@@ -17,7 +17,7 @@ class VerificationResultsPage(Page):
         if verification_results is None:
             # samples were not comparable
             mainframe.pack(pady=(15, 0))
-            ttk.Label(mainframe, text="No comparable data", font=root.font14bold).pack(anchor = ttk.W)
+            ttk.Label(mainframe, text="No comparable data", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
             ttk.Label(mainframe, text="Select samples that match in some characters or choose verification with encryption.").pack(anchor = ttk.W)
         else:
             mainframe.pack()
@@ -41,7 +41,7 @@ class VerificationResultsPage(Page):
             p2.title.set_text("Rejection rate in %")
             figure.tight_layout()
             FigureCanvasTkAgg(figure, mainframe).get_tk_widget().pack(side=ttk.LEFT)
-            # add text box for displaying results
+            # add text box for displaying text results
             result_text_box = ScrolledText(mainframe, width=30, wrap=ttk.WORD)
             result_text_box.insert(ttk.INSERT, results_as_text)
             result_text_box.configure(state=ttk.DISABLED)

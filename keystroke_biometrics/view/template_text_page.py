@@ -5,10 +5,6 @@ import controller.application_logic as c
 class TemplateTextPage(Page):
     """
     A class for representing the template text page of the user interface
-
-    Attributes (Object)
-
-    Methods
     """
 
     def __init__(self, root):
@@ -16,7 +12,7 @@ class TemplateTextPage(Page):
         mainframe = ttk.Frame(self)
         mainframe.pack(pady=(15, 0))
         # add instructions
-        ttk.Label(mainframe, text="Enter your template text", font=root.font14bold).pack(anchor = ttk.W)
+        ttk.Label(mainframe, text="Enter your template text", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
         ttk.Label(mainframe, text="You can also paste a copied text. For the template text no keystrokes will be recorded.").pack(anchor = ttk.W)
         # add textbox for sample text
         template_textbox = ttk.Text(mainframe, height=12, width=100, wrap=ttk.WORD)
