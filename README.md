@@ -29,16 +29,16 @@ False Rejection Rate (FRR): To be able to evaluate the FRR, select the samples t
 
 ## Screenshots
 
-Recording fixed text
-![image](/screenshots/recording_fixed_text.png?raw=true)
+### Recording free text
+![image](/screenshots/recording_free_text.png?raw=true)
 
-Recording results
+### Recording results
 ![image](/screenshots/recording_results.png?raw=true)
 
-Verification
+### Verification
 ![image](/screenshots/verification.png?raw=true)
 
-Find more screenshots here: [Screenshots for this project](screenshots/)
+Find more screenshots here: [Screenshots Keystroke Biometrics](screenshots/)
 
 ## Contributing
 State if you are open to contributions and what your requirements are for accepting them.
