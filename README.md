@@ -4,15 +4,14 @@
 This software captures typing behaviour. Free texts and fixed texts (depending on a template text) can be submitted as samples. The application offers the possibility to statistically evaluate several entries in relation to each other and to present the results to the user. 
 
 ## Visuals / Screenshots
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-image.png
+![Alt text](/screenshots/recording_free_text.png?raw=true "Recording free text")
 
 ## Installation
 Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
 ## Usage
 
-# Submitting samples (relevant for study participants)
+### Submitting samples (relevant for study participants)
 
 Samles with free text:
 Click on "recording samples (free text)" in the navigation bar. Enter a text in the input field, your keystrokes will be recorded. Finish the input with the enter key. The "recording results" page is now displayed. You can discard or save your sample. You will then automatically return to the recording page.
@@ -22,7 +21,7 @@ Samples with fixed text are based on a given template text from which they may n
 
 Tip: Prefer short texts over long ones to avoid typing errors.
 
-# Carrying out the verification process (relevant for persons conducting a study)
+### Carrying out the verification process (relevant for persons conducting a study)
 
 Initiate the verification process:
 Click on "Verification" in the navigation bar. All previously saved samples will be displayed here. Select at least one learning sample and one test sample. Start the verification process by clicking on the button "Start verification process". If desired, click on "Encrypt testsamples for verification" beforehand. The results are then displayed.

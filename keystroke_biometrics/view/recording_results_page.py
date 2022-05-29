@@ -9,7 +9,7 @@ class RecordingResultsPage(Page):
     """
 
     def __init__(self, root, fixed_text_and_results):
-        super().__init__(root, "Recording Results")
+        super().__init__(root, "Recording results")
         fixed_text, results = fixed_text_and_results
         state_save_button = ttk.NORMAL
         if results is None:
