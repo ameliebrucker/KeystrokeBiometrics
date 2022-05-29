@@ -3,9 +3,6 @@
 ## Description
 This software captures typing behaviour. Free texts and fixed texts (depending on a template text) can be submitted as samples. The application offers the possibility to statistically evaluate several entries in relation to each other and to present the results to the user. 
 
-## Visuals / Screenshots
-![Alt text](/screenshots/recording_free_text.png?raw=true "Recording free text")
-
 ## Installation
 Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
@@ -29,6 +26,19 @@ Click on "Verification" in the navigation bar. All previously saved samples will
 Evaluation of the verification process:
 False Acceptance Rate (FAR): To be able to evaluate the FAR, select the samples belonging to a user as learn samples and the samples belonging to other users (imposter) as test samples. The subsequently displayed acceptance rate shows the FAR.
 False Rejection Rate (FRR): To be able to evaluate the FRR, select the samples that belong to a user as learning samples and test samples. The rejection rate that is then displayed shows the FRR.
+
+## Screenshots
+
+Recording fixed text
+![image](/screenshots/recording_fixed_text.png?raw=true)
+
+Recording results
+![image](/screenshots/recording_results.png?raw=true)
+
+Verification
+![image](/screenshots/verification.png?raw=true)
+
+Find more screenshots here: [Screenshots for this project](screenshots/)
 
 ## Contributing
 State if you are open to contributions and what your requirements are for accepting them.
