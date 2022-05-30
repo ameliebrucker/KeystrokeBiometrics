@@ -29,8 +29,9 @@ False Rejection Rate (FRR): To be able to evaluate the FRR, select the samples t
 
 ## Screenshots
 
-### Pages "Recording (free text)" & "Recording results"
-![image](/screenshots/recording_free_text.png?raw=true) ![image](/screenshots/recording_results.png?raw=true)
+Recording (free text) | Recording results
+- | - 
+![image](/screenshots/recording_free_text.png?raw=true) | ![image](/screenshots/recording_results.png?raw=true)
 
 ### Verification
 ![image](/screenshots/verification.png?raw=true)
