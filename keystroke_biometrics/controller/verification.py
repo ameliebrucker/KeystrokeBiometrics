@@ -82,11 +82,11 @@ def results_per_threshold(distance_per_sample, compared_values, max_threshold):
                 # adjust number of successful verfications
                 y_acceptance[i] = y_acceptance[i]+1
     # set thresholds as number between 0 and 1 as list
-        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+    x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
     # form results as text
-        acceptance_text = "Acceptance:\n\n"
-        rejection_text = "Rejection:\n\n"
-        euklidean_distance_text = "Normalized euklidean distance:\n\n"
+    acceptance_text = "Acceptance:\n\n"
+    rejection_text = "Rejection:\n\n"
+    euklidean_distance_text = "Normalized euklidean distance:\n\n"
     # calculate acceptance rate in percentage 
     testsample_count = len(distance_per_sample)
     for i in range(11):
@@ -97,8 +97,8 @@ def results_per_threshold(distance_per_sample, compared_values, max_threshold):
         # append formatted acceptance and rejection values to text
         x_threshold = x_thresholds[i]
         absolute_threshold = thresholds[i]
-        acceptance_text += f"{x_threshold:.1f} ({absolute_threshold:03} ms) - {acceptance_percentage} %\n"
-        rejection_text += f"{x_threshold:.1f} ({absolute_threshold:03} ms) - {rejection_percentage} %\n"
+        acceptance_text += f"{x_threshold:.1f} ({absolute_threshold:04.0f} ms) - {acceptance_percentage} %\n"
+        rejection_text += f"{x_threshold:.1f} ({absolute_threshold:04.0f} ms) - {rejection_percentage} %\n"
     # append formatted euklidean distance per testsample to text
     number = 1
     for k, v in distance_per_sample.items():

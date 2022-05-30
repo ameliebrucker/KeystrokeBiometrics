@@ -32,7 +32,7 @@ class RecordingPage(Page):
         username_frame.pack(anchor = ttk.E)
         ttk.Label(username_frame, text="Username: ").grid(row=0)
         username = ttk.StringVar(value=c.current_username)
-        # limit username length by register validation function
+        # limit username length by registering validation function
         limit_length_command = (root.register(self.limit_username_length), '%P')
         username_entry = ttk.Entry(username_frame, text=username, validate="key", validatecommand=limit_length_command)
         username_entry.bind("<FocusOut>", lambda e: c.set_username(username.get()))
@@ -90,6 +90,9 @@ class RecordingPage(Page):
 
         Parameter:
         input: the entered username
+
+        Return:
+        boolean, indicates whether input is valid or not
         """
 
         if len(input) > 20:
