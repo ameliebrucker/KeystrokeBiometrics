@@ -33,8 +33,9 @@ Recording (free text)                                   | Recording results
 ------------------------------------------------------- | -------------------------------------------------------
 ![image](/screenshots/recording_free_text.png?raw=true) | ![image](/screenshots/recording_results.png?raw=true)
 
-### Verification
-![image](/screenshots/verification.png?raw=true)
+Verification                                            | Verification results
+------------------------------------------------------- | -------------------------------------------------------
+![image](/screenshots/verification.png?raw=true)        | ![image](/screenshots/recording_results.png?raw=true)
 
 Find more screenshots here: [Screenshots Keystroke Biometrics](screenshots/)
 

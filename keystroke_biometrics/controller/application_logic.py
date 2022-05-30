@@ -144,43 +144,11 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
     learnsamples = fileaccess.read_samples_from_files(learnsample_identifiers)
     testsamples = fileaccess.read_samples_from_files(testsample_identifiers)
     # perform verification process
-    compared_values, results, euklidean_distance_dict = verification.verify_per_threshold(learnsamples, testsamples, encrypted)
-    if compared_values > 0:
-        # samples contained comparable data
-        # set thresholds as number between 0 and 1 as list
-        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
-        # set acceptance and rejection values as list
-        y_acceptance = list(results.values())
-        y_rejection = []
-        # form results as text
-        acceptance_text = "Acceptance:\n\n"
-        rejection_text = "Rejection:\n\n"
-        learnsamples_text = "Learnsamples:\n\n"
-        euklidean_distance_text = "Normalized euklidean distance:\n\n"
-        # process percentage results of verification
-        index = 0
-        for k, v in results.items():
-            # fill list of rejection values based on results
-            rejection_value = round(100 - v, 2)
-            y_rejection.append(rejection_value)
-            # append formatted acceptance and rejection values to text
-            acceptance_text += f"{x_thresholds[index]:.1f} ({k:03} ms) - {v} %\n"
-            rejection_text += f"{x_thresholds[index]:.1f} ({k:03} ms) - {rejection_value} %\n"
-            index += 1
-        # append formatted learnsample identifiers to text
-        index = 1
-        for identifier in learnsample_identifiers:
-            learnsamples_text += f"{index}. Learnsample\n\"{identifier}\"\n"
-            index += 1
-        # append formatted euklidean distance per testsample to text
-        index = 1
-        for k, v in euklidean_distance_dict.items():
-            euklidean_distance_text += f"{index}. Testsample\n\"{k}\"\nDistance: {v:.4f}\n"
-            index += 1
-        # form result substrings to total results text
-        results_as_text = f"{acceptance_text}\n{rejection_text}\n{learnsamples_text}\n{euklidean_distance_text}\nCompared values in total: {compared_values}"
-        # show verification results page with results as text and chart data
-        callback("VerificationResultsPage", (results_as_text, x_thresholds, y_acceptance, y_rejection))
+    compared_values, max_threshold, euklidean_distance_dict = verification.verify_samples(learnsamples, testsamples, encrypted)
+    results = verification.results_per_threshold(euklidean_distance_dict, compared_values, max_threshold)
+    if results is not None:
+        # show verification results page with results
+        callback("VerificationResultsPage", results)
     else:
         # show verification results page without results
         callback("VerificationResultsPage")

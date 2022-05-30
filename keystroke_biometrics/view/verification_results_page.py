@@ -12,7 +12,7 @@ class VerificationResultsPage(Page):
     """
 
     def __init__(self, root, verification_results = None):
-        super().__init__(root, "Verification Results")
+        super().__init__(root, "Verification results")
         mainframe = ttk.Frame(self)
         if verification_results is None:
             # samples were not comparable

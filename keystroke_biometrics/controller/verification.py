@@ -1,8 +1,8 @@
-thresholds = (800, 720, 640, 560, 480, 400, 320, 240, 160, 80, 0)
+from math import ceil
 
-def verify_per_threshold(learnsamples, testsamples, encrypted):
+def verify_samples(learnsamples, testsamples, encrypted):
     """
-    performs verification process for each testsample against model (build from learnsamples) with different thresholds
+    performs verification process for each testsample against model (build from learnsamples)
 
     Parameter:
     learnsamples: samples from "valid" user
@@ -12,13 +12,13 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
     Return:
     tupel of
         number of compared values
-        results as dictionary with thresholds and acceptance rate in %
+        maximal euklidean distance from all testsamples
         dictionary with normalized euklidean distance per testsample identifier
     """
     
     if not testsamples or not learnsamples:
         # no compared values, no results
-        return (0, {})
+        return (0, 0, {})
     modelvalues = create_modelvalues(learnsamples)
     testvalues_per_sample = []
     if encrypted:
@@ -29,10 +29,7 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
         for s in testsamples:
             testvalues_per_sample.append((s.values_per_feature_and_chars, s.get_short_identifier()))
     compared_values = 0
-    # create results dictionary with key: threshold, value: number of successful verfications
-    results = {}
-    for th in thresholds:
-        results[th] = 0
+    max_euklidean_distance = 0
     # create eukidean distance dictionary
     euklidean_distance_dict = {}
     # do verification process for every testsample
@@ -46,15 +43,72 @@ def verify_per_threshold(learnsamples, testsamples, encrypted):
             euklidean_distance = calculate_euklidean_distance(vectors)
             # add identifier as key and normalized euklidean distance as value to dictionary
             euklidean_distance_dict[tupel[1]] = euklidean_distance
-            # compare all thresholds with euklidean distance
-            for k, v in results.items():
-                if euklidean_distance <= k:
-                    # adjust number of successful verfications
-                    results[k] = v+1
+            # set new max_euklidean_distance if necessary
+            if euklidean_distance > max_euklidean_distance:
+                max_euklidean_distance = euklidean_distance
+    return (compared_values, int(ceil(max_euklidean_distance)), euklidean_distance_dict)
+
+def results_per_threshold(distance_per_sample, compared_values, max_threshold):
+    """
+    provides results per threshold as text and char data
+
+    Parameter:
+    distance_per_sample: dictionary with normalized euklidean distance per testsample identifier
+    compared_values: number of compared values
+    max_threshold: highest threshold
+
+    Return:
+    tupel of
+        results as text
+        x thresholds
+        y acceptance
+        y rejection
+    """
+
+    if compared_values == 0:
+        # samples contained no comparable data
+        return None
+    # set thresholds based on max_threshold
+    thresholds = []
+    for i in range(11):
+        thresholds.append(round(max_threshold/10 * i, 0))
+    # set acceptance and rejection values as list
+    y_acceptance = [0] * 11
+    y_rejection = [0] * 11
+    for distance in distance_per_sample.values():
+        # compare all thresholds with euklidean distance
+        for i in range(11):
+            if distance <= thresholds[i]:
+                # adjust number of successful verfications
+                y_acceptance[i] = y_acceptance[i]+1
+    # set thresholds as number between 0 and 1 as list
+        x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+    # form results as text
+        acceptance_text = "Acceptance:\n\n"
+        rejection_text = "Rejection:\n\n"
+        euklidean_distance_text = "Normalized euklidean distance:\n\n"
     # calculate acceptance rate in percentage 
-    for k, v in results.items():
-        results[k] = round(v/len(testsamples) * 100, 2)
-    return (compared_values, results, euklidean_distance_dict)
+    testsample_count = len(distance_per_sample)
+    for i in range(11):
+        acceptance_percentage = round(y_acceptance[i]/testsample_count * 100, 2)
+        rejection_percentage = round(100 - acceptance_percentage, 2)
+        y_acceptance[i]  = acceptance_percentage
+        y_rejection[i] = rejection_percentage
+        # append formatted acceptance and rejection values to text
+        x_threshold = x_thresholds[i]
+        absolute_threshold = thresholds[i]
+        acceptance_text += f"{x_threshold:.1f} ({absolute_threshold:03} ms) - {acceptance_percentage} %\n"
+        rejection_text += f"{x_threshold:.1f} ({absolute_threshold:03} ms) - {rejection_percentage} %\n"
+    # append formatted euklidean distance per testsample to text
+    number = 1
+    for k, v in distance_per_sample.items():
+        euklidean_distance_text += f"{number}. Testsample\n\"{k}\"\nDistance: {v:.4f}\n"
+        number += 1
+    # form result substrings to total results text
+    results_as_text = f"Threshold span:\n0 ms (0) - {max_threshold} ms (1)\n\n{acceptance_text}\n{rejection_text}\n{euklidean_distance_text}\nCompared values in total: {compared_values}"
+    return (results_as_text, x_thresholds, y_acceptance, y_rejection) 
+    
+
 
 def create_modelvalues(learnsamples):
     """
