@@ -35,7 +35,7 @@ Recording (free text)                                   | Recording results
 
 Verification                                            | Verification results
 ------------------------------------------------------- | -------------------------------------------------------
-![image](/screenshots/verification.png?raw=true)        | ![image](/screenshots/recording_results.png?raw=true)
+![image](/screenshots/verification.png?raw=true)        | ![image](/screenshots/verification_results.png?raw=true)
 
 Find more screenshots here: [Screenshots Keystroke Biometrics](screenshots/)
 
