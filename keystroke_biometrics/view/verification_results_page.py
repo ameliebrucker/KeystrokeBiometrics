@@ -12,7 +12,6 @@ class VerificationResultsPage(Page):
 
     Attributes (Object)
     results_as_text: verification results as text
-    x_thresholds: thresholds values for x axis
     y_acceptance: acceptance values for y axis of acceptance chart
     y_rejection: rejection values for y axis of rejection chart
     figure: figure with plotted charts
@@ -33,27 +32,29 @@ class VerificationResultsPage(Page):
         mainframe = ttk.Frame(self)
         if verification_results is None:
             # samples were not comparable
-            mainframe.pack(pady=(15, 0))
+            mainframe.pack(pady=(15, 15))
             ttk.Label(mainframe, text="No comparable data", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
             ttk.Label(mainframe, text="Select samples that match in some characters or choose verification with encryption.").pack(anchor = ttk.W)
         else:
             mainframe.pack()
-            self.results_as_text, self.x_thresholds, self.y_acceptance, self.y_rejection, max_threshold_input = verification_results 
+            self.results_as_text, self.y_acceptance, self.y_rejection, max_threshold_input = verification_results 
             # add diagrams
             self.figure = Figure(figsize=(6.2, 4.6))
+            # set thresholds values for x axis as number between 0 and 1
+            x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
             y_ticks = range(0, 101, 10)
             # add chart for acceptance rate
             plot1 = self.figure.add_subplot(211)
-            self.line_plot1, = plot1.plot(self.x_thresholds, self.y_acceptance, color='green')
+            self.line_plot1, = plot1.plot(x_thresholds, self.y_acceptance, color='green')
             plot1.set_yticks(y_ticks)
-            plot1.set_xticks(self.x_thresholds)
+            plot1.set_xticks(x_thresholds)
             plot1.set_xlabel('Threshold')
             plot1.title.set_text("Acceptance rate in %")
             # add chart for rejection rate
             plot2 = self.figure.add_subplot(212)
-            self.line_plot2, = plot2.plot(self.x_thresholds, self.y_rejection, color='red')
+            self.line_plot2, = plot2.plot(x_thresholds, self.y_rejection, color='red')
             plot2.set_yticks(y_ticks)
-            plot2.set_xticks(self.x_thresholds)
+            plot2.set_xticks(x_thresholds)
             plot2.set_xlabel('Threshold')
             plot2.title.set_text("Rejection rate in %")
             self.figure.tight_layout()
@@ -133,5 +134,5 @@ class VerificationResultsPage(Page):
         updates result based on new threshold
         """
 
-        self.results_as_text, self.x_thresholds, self.y_acceptance, self.y_rejection = c.update_verification_results(self.max_threshold.get())
+        self.results_as_text, self.y_acceptance, self.y_rejection = c.update_verification_results(self.max_threshold.get())
         self.show_results()

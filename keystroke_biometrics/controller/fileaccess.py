@@ -131,7 +131,7 @@ def read_samples_from_files(identifier_list):
     identifier_list: list of identifiers for which a sample should be returned
 
     Return:
-    samples which belong to given identifiers
+    samples which belong to given identifiers as list
 
     Precondition:
     overview_files_list and sample_files_list are initialized

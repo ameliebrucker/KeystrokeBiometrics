@@ -48,7 +48,7 @@ def verify_samples(learnsamples, testsamples, encrypted):
                 max_euklidean_distance = euklidean_distance
     return (compared_values, int(ceil(max_euklidean_distance)), euklidean_distance_dict)
 
-def results_per_threshold(distance_per_sample, compared_values, max_threshold):
+def get_results_per_threshold(distance_per_sample, compared_values, max_threshold):
     """
     provides results per threshold as text and char data
 
@@ -60,14 +60,13 @@ def results_per_threshold(distance_per_sample, compared_values, max_threshold):
     Return:
     tupel of
         results as text
-        x thresholds
         y acceptance
         y rejection
     """
 
     if compared_values == 0:
         # samples contained no comparable data
-        return None
+        return (None, None, None)
     # set thresholds based on max_threshold
     thresholds = []
     for i in range(11):
@@ -81,8 +80,6 @@ def results_per_threshold(distance_per_sample, compared_values, max_threshold):
             if distance <= thresholds[i]:
                 # adjust number of successful verfications
                 y_acceptance[i] = y_acceptance[i]+1
-    # set thresholds as number between 0 and 1 as list
-    x_thresholds = (0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
     # form results as text
     acceptance_text = "Acceptance:\n\n"
     rejection_text = "Rejection:\n\n"
@@ -95,18 +92,17 @@ def results_per_threshold(distance_per_sample, compared_values, max_threshold):
         y_acceptance[i]  = acceptance_percentage
         y_rejection[i] = rejection_percentage
         # append formatted acceptance and rejection values to text
-        x_threshold = x_thresholds[i]
         absolute_threshold = thresholds[i]
-        acceptance_text += f"{x_threshold:.1f} ({absolute_threshold:04.0f} ms) - {acceptance_percentage} %\n"
-        rejection_text += f"{x_threshold:.1f} ({absolute_threshold:04.0f} ms) - {rejection_percentage} %\n"
+        acceptance_text += f"{0.1 * i:.1f} ({absolute_threshold:04.0f} ms) - {acceptance_percentage} %\n"
+        rejection_text += f"{0.1 * i:.1f} ({absolute_threshold:04.0f} ms) - {rejection_percentage} %\n"
     # append formatted euklidean distance per testsample to text
     number = 1
     for k, v in distance_per_sample.items():
-        euklidean_distance_text += f"{number}. Testsample\n\"{k}\"\nDistance: {v:.4f}\n"
+        euklidean_distance_text += f"{number}. Testsample\n\"{k}\"\nDistance: {v:.4f} ms\n"
         number += 1
     # form result substrings to total results text
     results_as_text = f"Threshold span:\n0 ms (0) - {max_threshold} ms (1)\n\n{acceptance_text}\n{rejection_text}\n{euklidean_distance_text}\nCompared values in total: {compared_values}"
-    return (results_as_text, x_thresholds, y_acceptance, y_rejection) 
+    return (results_as_text, y_acceptance, y_rejection) 
     
 
 

@@ -6,7 +6,9 @@ from model.sample import Sample
 template_text = ""
 current_username = "Anonym"
 current_sample = None
+# euklidean distance per testsample from verification process
 current_distance_per_sample = None
+# compared values count from verification process
 current_compared_values = 0
 # keysymbols for backspace, del, arrow keys (->, <-)
 forbidden_keysyms = ("BackSpace", "Delete", "Right", "Left")
@@ -149,11 +151,13 @@ def verify(learnsample_identifiers, testsample_identifiers, encrypted, callback)
     global current_distance_per_sample
     global current_compared_values
     current_compared_values, max_threshold, current_distance_per_sample = verification.verify_samples(learnsamples, testsamples, encrypted)
-    results = verification.results_per_threshold(current_distance_per_sample, current_compared_values, max_threshold)
-    if results is not None:
+    # get results per threshold as text and char data
+    results_as_text, y_acceptance, y_rejection = verification.get_results_per_threshold(current_distance_per_sample, current_compared_values, max_threshold)
+    if results_as_text is not None:
         # show verification results page with results and max_threshold
-        callback("VerificationResultsPage", (results[0], results[1], results[2], results[3], max_threshold))
+        callback("VerificationResultsPage", (results_as_text, y_acceptance, y_rejection, max_threshold))
     else:
+        # samples contained no comparable data
         current_distance_per_sample = None
         current_compared_values = 0
         # show verification results page without results
@@ -167,11 +171,11 @@ def update_verification_results(max_threshold):
     max_threshold: highest threshold
 
     Return:
-    new results as list of results as text and char data (x thresholds, y acceptance and y rejection)
+    new results as list of results as text and char data (y acceptance and y rejection)
 
     Precondition:
     verify() function was already called (current_distance_per_sample and current_compared_values were filled with verification results)
     """
 
-    updated_results = verification.results_per_threshold(current_distance_per_sample, current_compared_values, max_threshold)
+    updated_results = verification.get_results_per_threshold(current_distance_per_sample, current_compared_values, max_threshold)
     return updated_results

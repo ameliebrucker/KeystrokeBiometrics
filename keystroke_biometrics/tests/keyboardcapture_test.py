@@ -25,7 +25,7 @@ class TestKeyboardcapture(unittest.TestCase):
 
     def setUp(self):
         """
-        sets up all_keyboard_actions before each test
+        sets up all_keyboard_actions before tests
         """
 
         k.all_keyboard_actions = [
