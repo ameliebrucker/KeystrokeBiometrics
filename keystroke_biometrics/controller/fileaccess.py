@@ -18,7 +18,7 @@ def total_path(filename):
     Return:
     total path including filename
     """
-    
+
     return os.path.join(path, filename)
 
 def fill_filelists():
@@ -28,6 +28,7 @@ def fill_filelists():
     Precondition:
     overview_files_list and sample_files_list are initialized
     """
+
     if not overview_files_list:
         # lists are empty, get names of all files in directory
         directory_list = os.listdir(path)
@@ -120,6 +121,7 @@ def read_sample_identifier_from_file():
             # file f is empty or not correct filled (broken)
             os.remove(total_path(f))
             overview_files_list.remove(f)
+            print (f"Overview file \"{f}\" was broken, it was removed.")
     return list(identifier_and_filenames.keys())
             
 

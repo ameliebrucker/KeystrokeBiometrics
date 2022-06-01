@@ -57,7 +57,9 @@ class RecordingPage(Page):
             required_text_box.insert(ttk.INSERT, c.template_text)
             required_text_box.configure(state=ttk.DISABLED)            
         # add textbox for keystroke recognition
-        self.input_textbox = ttk.Text(mainframe, height=12, wrap=ttk.WORD)
+        input_textbox_border = ttk.Frame(mainframe, bootstyle=ttk.LIGHT)
+        input_textbox_border.pack(fill=ttk.X)
+        self.input_textbox = ttk.Text(input_textbox_border, height=12, wrap=ttk.WORD)
         self.input_textbox.focus_set()
         self.input_textbox.bind("<KeyPress>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
         self.input_textbox.bind("<KeyRelease>", lambda e: c.process_keyboard_input(e, self.input_textbox.get(1.0, "end-1c"), fixed_text, self.input_validation_failed))
@@ -65,7 +67,7 @@ class RecordingPage(Page):
         self.input_textbox.bind("<Return>", lambda e: c.form_sample_from_entry(self.input_textbox.get(1.0, "end-1c"), fixed_text, root.change_page))
         # prevent user from changing cursor position
         self.input_textbox.bind("<Button>", lambda e: self.set_cursor_to_end())
-        self.input_textbox.pack(expand=True, fill=ttk.X)
+        self.input_textbox.pack(expand=True, fill=ttk.X, padx=1, pady=1)
         # add tooltip on how to type properly
         self.tooltip_frame = ttk.Frame(mainframe)
         self.tooltip_frame.pack()

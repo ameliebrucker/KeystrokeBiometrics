@@ -15,10 +15,12 @@ class TemplateTextPage(Page):
         ttk.Label(mainframe, text="Enter your template text", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
         ttk.Label(mainframe, text="You can also paste a copied text. For the template text no keystrokes will be recorded.").pack(anchor = ttk.W)
         # add textbox for sample text
-        template_textbox = ttk.Text(mainframe, height=12, width=100, wrap=ttk.WORD)
+        template_textbox_border = ttk.Frame(mainframe, bootstyle=ttk.LIGHT)
+        template_textbox_border.pack(fill=ttk.X)
+        template_textbox = ttk.Text(template_textbox_border, height=12, width=100, wrap=ttk.WORD)
         template_textbox.insert(ttk.INSERT, c.template_text)
         template_textbox.focus_set()
-        template_textbox.pack()
+        template_textbox.pack(padx=1, pady=1)
         # bind return key to setting template text
         template_textbox.bind("<Return>", lambda e: c.set_template_text(template_textbox.get(1.0, "end-1c"), root.change_page))
         # add button for setting template text

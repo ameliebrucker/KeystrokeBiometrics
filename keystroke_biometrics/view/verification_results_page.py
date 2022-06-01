@@ -66,7 +66,7 @@ class VerificationResultsPage(Page):
             self.result_text_box = ScrolledText(interaction_frame, width=30, wrap=ttk.WORD)
             self.result_text_box.pack(pady=(0, 4))
             # add box for adjusting threshold
-            threshold_border = ttk.Labelframe(interaction_frame, bootstyle=ttk.PRIMARY, width=30, text="Adjust the threshold")
+            threshold_border = ttk.Labelframe(interaction_frame, bootstyle=ttk.PRIMARY, text="Adjust the threshold")
             threshold_border.pack()
             # add threshold entry field + label
             threshold_frame = ttk.Frame(threshold_border)
