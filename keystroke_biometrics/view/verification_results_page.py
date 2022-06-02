@@ -63,19 +63,19 @@ class VerificationResultsPage(Page):
             interaction_frame = ttk.Frame(mainframe)
             interaction_frame.pack(side=ttk.RIGHT, expand=True, fill=ttk.Y)
             # add text box for displaying text results
-            self.result_text_box = ScrolledText(interaction_frame, width=30, wrap=ttk.WORD)
-            self.result_text_box.pack(pady=(0, 4))
+            self.result_text_box = ScrolledText(interaction_frame, width=22, wrap=ttk.WORD)
+            self.result_text_box.pack(pady=(0, 4), fill=ttk.X)
             # add box for adjusting threshold
             threshold_border = ttk.Labelframe(interaction_frame, bootstyle=ttk.PRIMARY, text="Adjust the threshold")
             threshold_border.pack()
             # add threshold entry field + label
             threshold_frame = ttk.Frame(threshold_border)
             threshold_frame.pack(padx=2)
-            ttk.Label(threshold_frame, text = "Maximal threshold: ", width=15).pack(side=ttk.LEFT)
+            ttk.Label(threshold_frame, text = "Maximal threshold: ").pack(side=ttk.LEFT)
             self.max_threshold = ttk.IntVar(value=max_threshold_input)
             # validate threshold as number between 0 and 9999 by registering validation function
             validate_threshold_command = (root.register(self.validate_threshold), '%P')
-            threshold_entry = ttk.Entry(threshold_frame, text=self.max_threshold, validate="key", validatecommand=validate_threshold_command, width=8)
+            threshold_entry = ttk.Entry(threshold_frame, text=self.max_threshold, validate="key", validatecommand=validate_threshold_command, width=6)
             threshold_entry.pack(side=ttk.LEFT)
             ttk.Label(threshold_frame, text="ms").pack(side=ttk.RIGHT)
             # add button to apply new threshold

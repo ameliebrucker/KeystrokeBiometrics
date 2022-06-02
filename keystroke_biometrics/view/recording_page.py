@@ -14,7 +14,7 @@ class RecordingPage(Page):
 
     Methods
     set_cursor_to_end(): sets cursor to the end of input_textbox
-    limit_username_length(event): limits username to 30 characters
+    validate_usernameh(input): limits username to 20 characters and numbers and letters only
     input_validation_failed(comparison_failed): displays information about failing input validation
     """
 
@@ -33,7 +33,7 @@ class RecordingPage(Page):
         ttk.Label(username_frame, text="Username: ").grid(row=0)
         username = ttk.StringVar(value=c.current_username)
         # limit username length by registering validation function
-        limit_length_command = (root.register(self.limit_username_length), '%P')
+        limit_length_command = (root.register(self.validate_username), '%P')
         username_entry = ttk.Entry(username_frame, text=username, validate="key", validatecommand=limit_length_command)
         username_entry.bind("<FocusOut>", lambda e: c.set_username(username.get()))
         username_entry.grid(row=0, column=1)
@@ -86,9 +86,9 @@ class RecordingPage(Page):
         # prevent default behaviour of setting cursor to clicked position
         return("break")
     
-    def limit_username_length(self, input):
+    def validate_username(self, input):
         """
-        validates input to limit username to 20 characters
+        limits username to 20 characters and numbers and letters only
 
         Parameter:
         input: the entered username
@@ -100,7 +100,11 @@ class RecordingPage(Page):
         if len(input) > 20:
             return False
         else:
-            return True
+            # limit to letters and numbers only
+            if len(input) == 0 or input.isalnum():
+                return True
+            else:
+                return False
 
     def input_validation_failed(self, comparison_failed):
         """
