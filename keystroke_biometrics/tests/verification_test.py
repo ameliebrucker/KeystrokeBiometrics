@@ -37,7 +37,6 @@ class TestVerification(unittest.TestCase):
         sets up test values before tests
         """
 
-        self.maxDiff = None
         self.modelvalues_for_testing = (
             {(Feature.M, "x") : 200,
             (Feature.DD, "xy") : 250,
