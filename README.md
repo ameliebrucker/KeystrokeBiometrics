@@ -6,7 +6,7 @@ This software captures typing behaviour. Free texts and fixed texts (depending o
 
 ## Installation
 
-Please install python version 3.10.2 or upwards. You can start the software by executing the module keystroke_biometrics or the contained __main__.py file via python.
+Please install python version 3.10.2 or upwards. You can start the software by executing the module keystroke_biometrics or the contained \__main__.py file via python.
 
 Please note that correct functionality cannot be guaranteed with a Python version < 3.10.2, even if the application starts. For this purpose, it may be necessary to specify the exact version when starting the software (e.g. by entering "python3.10 keystroke_biometrics" as command) if it is not set as default.
 
