@@ -79,7 +79,7 @@ def set_template_text(text, callback):
 
 def set_username(username):
     """
-    sets username
+    sets username (use case: lambda functions, where variable current_username can't be accessed directly)
 
     Parameter:
     username: name to be set as username
@@ -89,7 +89,7 @@ def set_username(username):
     current_username = username
     
 
-def get_all_sample_identifier(callback):
+def get_all_sample_identifiers(callback):
     """
     retrieves identifiers for archived samples
 
@@ -97,7 +97,7 @@ def get_all_sample_identifier(callback):
     callback: callback function for showing page with all identifiers
     """
 
-    all_identifiers = fileaccess.read_sample_identifier_from_file()
+    all_identifiers = fileaccess.read_sample_identifiers_from_file()
     # show verification page with identifiers
     callback ("VerificationPage", all_identifiers)
 

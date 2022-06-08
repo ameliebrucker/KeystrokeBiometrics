@@ -81,7 +81,7 @@ def write_sample_to_file (sample):
         pickle.dump(sample, file)
     sample_files_list.append(sample_filename)
 
-def read_sample_identifier_from_file():
+def read_sample_identifiers_from_file():
     """
     provides all sample identifiers from overview files, corrects them if files were deleted and fills identifier_and_filenames
 
@@ -150,7 +150,7 @@ def read_samples_from_files(identifier_list):
             # check if broken file was already removed
             if i in identifier_and_filenames.keys():
                 # remove broken file
-                # sample will also be removed from overview during next call of read_sample_identifier_from_file() 
+                # sample will also be removed from overview during next call of read_sample_identifiers_from_file() 
                 os.remove(total_path(identifier_and_filenames[i]))
                 sample_files_list.remove(identifier_and_filenames[i])
                 del identifier_and_filenames[i]

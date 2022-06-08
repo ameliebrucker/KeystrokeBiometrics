@@ -14,7 +14,7 @@ class RecordingPage(Page):
 
     Methods
     set_cursor_to_end(): sets cursor to the end of input_textbox
-    validate_usernameh(input): limits username to 20 characters and numbers and letters only
+    validate_username(input): limits username to 20 characters and numbers and letters only
     input_validation_failed(comparison_failed): displays information about failing input validation
     """
 

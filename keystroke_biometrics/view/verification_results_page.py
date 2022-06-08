@@ -12,13 +12,13 @@ class VerificationResultsPage(Page):
 
     Attributes (Object)
     results_as_text: verification results as text
-    y_acceptance: acceptance values for y axis of acceptance chart
-    y_rejection: rejection values for y axis of rejection chart
+    y_acceptance: acceptance values for y axis of acceptance chart as list
+    y_rejection: rejection values for y axis of rejection chart as list
     figure: figure with plotted charts
-    line_plot1: chart line of plot 1 (acceptance)
-    line_plot2: chart line of plot 2 (rejection)
+    line_plot1: chart line of plot 1 (acceptance) as Line2D object
+    line_plot2: chart line of plot 2 (rejection) as Line2D object
     result_text_box: text box for displaying results as text
-    max_threshold: maximal threshold
+    max_threshold: maximal threshold as int
     threshold_button: button for reloading results with new maximal threshold
 
     Methods
@@ -84,7 +84,7 @@ class VerificationResultsPage(Page):
             # show results as text and diagram
             self.show_results() 
         # add back button
-        ttk.Button(self, text="Back to sample selection", command=lambda: c.get_all_sample_identifier(root.change_page), style="SubmitButton.TButton").pack()
+        ttk.Button(self, text="Back to sample selection", command=lambda: c.get_all_sample_identifiers(root.change_page), style="SubmitButton.TButton").pack()
 
     def show_results(self):
         """

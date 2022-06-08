@@ -18,7 +18,7 @@ class Application (ttk.tk.Tk):
     font18: font in size 18 for styling
     font14bold: bold font in size 14 for styling
     font10: font in size 10 for styling
-    all_page_classes: tuple of all pages included in application
+    all_page_classes: dictionary of all pages included in application
     page_from_header: name of current page based on navigation buttons from header
     current_page: currently shown page
 

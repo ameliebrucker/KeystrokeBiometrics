@@ -10,7 +10,7 @@ def verify_samples(learnsamples, testsamples, encrypted):
     encrypted: boolean, indicates whether character values from learnsamples should be treated as encrypted
 
     Return:
-    tupel of
+    tuple of
         number of compared values
         maximal euklidean distance from all testsamples
         dictionary with normalized euklidean distance per testsample identifier
@@ -33,16 +33,16 @@ def verify_samples(learnsamples, testsamples, encrypted):
     # create eukidean distance dictionary
     euklidean_distance_dict = {}
     # do verification process for every testsample
-    for tupel in testvalues_per_sample:
+    for tuple in testvalues_per_sample:
         # form vectors from modelvalues and testvalues
-        vectors = build_vectors_as_list (modelvalues, tupel[0])
+        vectors = build_vectors_as_list (modelvalues, tuple[0])
         vector_size = len(vectors)
         if (vector_size > 0):
             # model and testvalues are comparable
             compared_values += vector_size
             euklidean_distance = calculate_euklidean_distance(vectors)
             # add identifier as key and normalized euklidean distance as value to dictionary
-            euklidean_distance_dict[tupel[1]] = euklidean_distance
+            euklidean_distance_dict[tuple[1]] = euklidean_distance
             # set new max_euklidean_distance if necessary
             if euklidean_distance > max_euklidean_distance:
                 max_euklidean_distance = euklidean_distance
@@ -58,7 +58,7 @@ def get_results_per_threshold(distance_per_sample, compared_values, max_threshol
     max_threshold: highest threshold
 
     Return:
-    tupel of
+    tuple of
         results as text
         y acceptance
         y rejection
