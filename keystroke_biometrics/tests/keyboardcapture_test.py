@@ -10,7 +10,8 @@ class TestKeyboardcapture(unittest.TestCase):
     keyboard_actions_for_testing: example keyboard_actions list for test functions
 
     Methods
-    setUp(): sets up all_keyboard_actions before each test
+    setUp(): sets up all_keyboard_actions before tests
+    tearDownClass(cls): clears up all_keyboard_actions after tests are finished
     test_find_next_down_and_up(): tests the find_next_down_and_up() function
     test_find_next_down_and_up_non_existent_down(): tests the find_next_down_and_up() function with non existent down value
     test_find_next_down_and_up_non_existent_up(): tests the find_next_down_and_up() function with non existent up value
@@ -37,6 +38,14 @@ class TestKeyboardcapture(unittest.TestCase):
         (800, 'b', '3'),
         (2000, 'd', '3')
         ]
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        clears up all_keyboard_actions after all tests are finished
+        """
+
+        k.stop_recording()
 
     def test_find_next_down_and_up(self):
         """
