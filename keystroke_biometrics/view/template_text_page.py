@@ -13,7 +13,7 @@ class TemplateTextPage(Page):
         mainframe.pack(pady=(15, 0))
         # add instructions
         ttk.Label(mainframe, text="Enter your template text", style="MediumHeadline.TLabel").pack(anchor = ttk.W)
-        ttk.Label(mainframe, text="You can also paste a copied text. For the template text no keystrokes will be recorded.").pack(anchor = ttk.W)
+        ttk.Label(mainframe, text="For the template text no keystrokes will be recorded.").pack(anchor = ttk.W)
         # add textbox for sample text
         template_textbox_border = ttk.Frame(mainframe, bootstyle=ttk.LIGHT)
         template_textbox_border.pack(fill=ttk.X)
