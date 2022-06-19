@@ -209,7 +209,7 @@ def create_testvalues_by_nearest_neighbor(model, testsample):
                 if (k_test[0] == k_model[0]):
                     # feature values are matching, compare time values
                     # char values k_test[1] are ignored
-                    distance = abs(v_test[0] - v_model)
+                    distance = abs(t - v_model)
                     if nearest_neighbor_key is None or distance < nearest_neighbor_distance:
                         # current model value is best match
                         nearest_neighbor_distance = distance
